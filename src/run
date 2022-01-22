@@ -1,0 +1,71 @@
+#!/usr/bin/ruby
+
+VERSION = "0.0.1"
+
+@tasks = Hash.new
+
+# Define a task.
+def task(name, help = "", &block)
+  if !name.is_a?(Symbol)
+    puts "first task parameter must be a symbol"
+    exit 1
+  end
+  if !help.is_a?(String)
+    puts "second task parameter must be a string"
+    exit 1
+  end
+  @tasks.store(name, { :help => help, :block => block })
+end
+
+# Call a task.
+def call(name)
+  @tasks[name][:block].call
+end
+
+# Run a shell command that will fail the tasks if it fails itself. It also add the
+# ability to interect with the command, contrary to backticks syntax.
+def shell(command)
+  puts
+  puts "> #{command}"
+  puts
+  if system(command) === false
+    exit 1
+  end
+end
+
+##########################################################################################
+
+RUNFILE = "Runfile.rb"
+
+if !File.exists?(RUNFILE)
+  puts "#{RUNFILE} does not exist"
+  exit 1
+end
+
+require "./#{RUNFILE}"
+
+##########################################################################################
+
+# Show the help screen if there is no provided task, or if it's explicitly requested.
+if ARGV.size == 0 || (ARGV.size == 1 && ARGV[0] == "help")
+  @tasks.sort.to_h.each do |name, task|
+    puts "#{name}#{" " * (35 - name.size)}#{task[:help]}"
+  end
+  exit
+end
+
+if ARGV.size == 1 && ARGV[0] == "version"
+  puts VERSION
+  exit
+end
+
+# Run the requested tasks.
+ARGV.each do |name|
+  name = name.to_sym
+  next if [:help, :version].include?(name)
+  if !@tasks.include?(name)
+    puts "Unknown '#{name}' task"
+    exit 1
+  end
+  call name
+end
