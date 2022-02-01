@@ -1,6 +1,17 @@
 #!/usr/bin/ruby
 
-VERSION = "0.0.1"
+# TODO
+# - README: run version
+# - help: add version
+# - support colors
+# - README: note about installing ruby 2.7
+# - auto-completion
+# - how to include other Runfiles: with `require`
+# - note about implicit returns
+# - how to pass parameters + do not run several scripts at once, there already are arbitrary calls
+# - better handle CTRL+C from `shell` command
+
+VERSION = "0.1.0"
 
 @tasks = Hash.new
 
@@ -60,12 +71,9 @@ if ARGV.size == 1 && ARGV[0] == "version"
 end
 
 # Run the requested tasks.
-ARGV.each do |name|
-  name = name.to_sym
-  next if [:help, :version].include?(name)
-  if !@tasks.include?(name)
-    puts "Unknown '#{name}' task"
-    exit 1
-  end
-  call name
+name = ARGV[1].to_sym
+if !@tasks.include?(name)
+  puts "Unknown '#{name}' task"
+  exit 1
 end
+call name
