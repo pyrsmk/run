@@ -1,10 +1,9 @@
 #!/usr/bin/ruby
 
 # TODO
-# - README: run version
-# - help: add version
-# - support colors
 # - README: note about installing ruby 2.7
+# - support colors: https://stackoverflow.com/a/1489233/4112863
+# - install with gem: https://stackoverflow.com/a/18294746/4112863
 # - auto-completion
 # - how to include other Runfiles: with `require`
 # - note about implicit returns
@@ -60,13 +59,11 @@ require "./#{RUNFILE}"
 # Show the help screen if there is no provided task, or if it's explicitly requested.
 if ARGV.size == 0 || (ARGV.size == 1 && ARGV[0] == "help")
   @tasks.sort.to_h.each do |name, task|
-    puts "#{name}#{" " * (35 - name.size)}#{task[:help]}"
+    puts
+    puts " run v#{VERSION}"
+    puts
+    puts " #{name}#{" " * (35 - name.size)}#{task[:help]}"
   end
-  exit
-end
-
-if ARGV.size == 1 && ARGV[0] == "version"
-  puts VERSION
   exit
 end
 
