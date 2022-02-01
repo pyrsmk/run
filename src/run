@@ -6,7 +6,7 @@
 # - auto-completion
 # - how to include other Runfiles: with `require`
 # - note about implicit returns
-# - how to pass parameters + do not run several scripts at once, there already are arbitrary calls
+# - how to pass parameters: #{ARGV.slice(1..).join(' ')}
 # - better handle CTRL+C from `shell` command
 
 VERSION = "0.1.0"

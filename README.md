@@ -21,7 +21,7 @@ Install Ruby with the package manager of your environment, or download it on [th
 When you're done, download the source file to a directory in your PATH, for example:
 
 ```sh
-wget https://raw.githubusercontent.com/pyrsmk/run/master/src/run -P ~/.local/bin
+wget https://raw.githubusercontent.com/pyrsmk/run/master/src/run -O ~/.local/bin/run
 chmod +x ~/.local/bin/run
 ```
 
