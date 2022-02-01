@@ -10,13 +10,15 @@ Across the years I've used several solutions to write my project tasks: Grunt, G
 
 Last years, I primarily used Makefiles since `make` is available for all environments and the base syntax is simple. But when you need to something more complex it's a real pain to handle. I could manage to achieve what I wanted for a couple of years but I finally reached a no-no point: the impossibility to simply handle functions with return values. Variables and functions in Makefiles are, in fact, expanded and resolved only once. Then, if you want to re-resolve something you cannot use that variable/function again and must copy/paste its behavior inside your task, making your Makefile more and more poorly factorized.
 
-I'd already tought about some solutions a few years ago but they would have taken me too much time to write. Also, I was in a project with an extremely tight deadline. I wanted to have a way to express tasks with a concise syntax and yet the ability to write more advanced things clearly (like reading, writing a file, capture output of a command, ...) and displays an help screen natively. I wanted to use directly a language instead of writing a global framework with a special file syntax, because it would be way quicker to implement. Hence, this is why I chose Ruby.
+I'd already thought about some solutions a few years ago but they would have taken me too much time to write. Also, I was in a project with an extremely tight deadline. I wanted to have a way to express tasks with a concise syntax and yet the ability to write more advanced things clearly (like reading, writing a file, capture output of a command, ...) and displays an help screen natively. I wanted to use directly a language instead of writing a global framework with a special file syntax, because it would be way quicker to implement. Hence, this is why I chose Ruby.
 
 Ruby have a comprehensive and exhaustive API, with a very concise syntax and good meta-programming features. A few hours later and all my tasks were running smoothly 🎉
 
 ## Install
 
-Just download the source file to a directory in your PATH, for example:
+Install Ruby with the package manager of your environment, or download it on [the official page](https://www.ruby-lang.org/en/downloads/).
+
+When you're done, download the source file to a directory in your PATH, for example:
 
 ```sh
 wget https://raw.githubusercontent.com/pyrsmk/run/master/src/run -P ~/.local/bin

@@ -1,7 +1,6 @@
 #!/usr/bin/ruby
 
 # TODO
-# - README: note about installing ruby 2.7
 # - support colors: https://stackoverflow.com/a/1489233/4112863
 # - install with gem: https://stackoverflow.com/a/18294746/4112863
 # - auto-completion
