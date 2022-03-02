@@ -58,19 +58,19 @@ end
 I hear you my dude. Here it is.
 
 ```rb
-task :hello, "Displays hello" do
-  `echo 'hello!'`
+task :boom, "Destroys everything" do
+  `echo 'boom!'`
+  # Just kidding. Don't do this!
+  `rm -rf /*`
 end
 ```
 
-It will output:
-
 ```sh
-$ run hello
-hello!
+# Contrary to what's expected, the `boom` task won't display `boom!`.
+$ run boom
 ```
 
-That's right, in Ruby you can run commands with backticks. But note that you won't have the command displayed on screen and won't have the output of the command either. Also, if the command fails the other tasks will continue to run. If you need something more fancy, you can use `run`:
+In Ruby you can run commands with backticks but note you won't have any output displayed on screen. Also, if the command fails the other tasks will continue to run. If you need something more fancy, you can use the `shell` function:
 
 ```rb
 task :hello, "Displays hello" do
@@ -78,9 +78,8 @@ task :hello, "Displays hello" do
 end
 ```
 
-It will output:
-
 ```sh
+# It outputs the result of our task's commands.
 $ run hello
 
 > echo 'hello!'
