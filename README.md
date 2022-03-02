@@ -39,7 +39,7 @@ run help
 
 ## Writing tasks
 
-Now, you need to write your `Dufile.rb` in your project. Here's a simple example:
+Now, you need to write your `Runfile.rb` in your project. Here's a simple example:
 
 ```rb
 task :hello, "Displays hello" do
