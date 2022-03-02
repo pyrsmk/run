@@ -4,6 +4,10 @@
 
 This project is a proof-of-concept aiming to write concise and powerful tasks.
 
+## Notes about Ruby vs Make
+
+Many of you will probably think "What ?! I need to install a new language on my system to use Run ? And I also need yo learn Ruby ?!". To them, I would respond "Hey ! With make it's actually the same, but 100x worse !".
+
 ## Why ?
 
 Across the years I've used several solutions to write my project tasks: Grunt, Gulp, Just (from Microsoft), make, Just (the Go project), ... There are plenty of solutions out there but they always come with flaws (in my opinion): too much verbosity, lack of performance, limited flexibility, etc.
@@ -16,7 +20,7 @@ Ruby have a comprehensive and exhaustive API, with a very concise syntax and goo
 
 ## Install
 
-Install Ruby with the package manager of your environment, or download it on [the official page](https://www.ruby-lang.org/en/downloads/).
+Install Ruby with the package manager of your environment, or download it from [the official page](https://www.ruby-lang.org/en/downloads/).
 
 When you're done, download the source file to a directory in your PATH, for example:
 
