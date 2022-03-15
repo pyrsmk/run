@@ -151,6 +151,25 @@ task :lint_js do
 end
 ```
 
+### Colorization
+
+It is often needed to colorize your messages sent to the user with `puts`. For this matter, Run is natively shipped with basic colorization so you don't need to add dependencies from Rubygems/Bundler (no need to install a whole dev stack, thanks).
+
+```rb
+puts "Please wait...".colorize(:yellow)
+```
+
+The available colors are :
+
+- black
+- red
+- green
+- yellow
+- blue
+- magenta
+- cyan
+- white
+
 ### Last word
 
 You don't even have to learn Ruby to being able to use `run`. Just follow the documentation, and find what you need when you need it, if there're no available shell commands for that (save or load a file, generate a UUID, making complex requests, matching with a regex, ...).

@@ -1,15 +1,13 @@
 #!/usr/bin/ruby
 
 # TODO
-# - support colors: https://stackoverflow.com/a/1489233/4112863
-# - install with gem: https://stackoverflow.com/a/18294746/4112863
 # - auto-completion
 # - how to include other Runfiles: with `require`
 # - note about implicit returns
 # - how to pass parameters: #{ARGV.slice(1..).join(' ')}
-# - better handle CTRL+C from `shell` command
+# - better handle CTRL+C from `shell` command: recipe
 
-VERSION = "0.1.2"
+VERSION = "0.2.0"
 
 @tasks = Hash.new
 
@@ -39,6 +37,24 @@ def shell(command)
   puts
   if system(command) === false
     exit 1
+  end
+end
+
+##########################################################################################
+
+class String
+  def colorize(color)
+    colors = {
+      :black   => 30,
+      :red     => 31,
+      :green   => 32,
+      :yellow  => 33,
+      :blue    => 34,
+      :magenta => 35,
+      :cyan    => 36,
+      :white   => 37,
+    }
+    "\033[#{colors[color.to_sym]}m#{self}\033[0m"
   end
 end
 
