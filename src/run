@@ -1,13 +1,17 @@
 #!/usr/bin/ruby
 
 # TODO
+# - add version header and verify version against the one installed + auto-update
 # - auto-completion
 # - how to include other Runfiles: with `require`
 # - note about implicit returns
 # - how to pass parameters: #{ARGV.slice(1..).join(' ')}
 # - better handle CTRL+C from `shell` command: recipe
 
-VERSION = "0.2.0"
+require "digest"
+require "open-uri"
+
+VERSION = "0.3.0"
 
 @tasks = Hash.new
 
@@ -33,10 +37,24 @@ end
 # ability to interect with the command, contrary to backticks syntax.
 def shell(command)
   puts
-  puts "> #{command}"
+  puts "#{">".colorize(:magenta)} #{command}"
   puts
   if system(command) === false
     exit 1
+  end
+end
+
+def require_remote(uri)
+  cache_path = "/tmp/#{Digest::MD5.hexdigest(uri)}"
+  begin
+    File.write(cache_path, URI.parse(uri).open.read)
+  ensure
+    raise "Unable to load #{uri}" if !File.exists? cache_path
+    begin
+      eval File.read(cache_path)
+    rescue SyntaxError => error
+      puts error.message.colorize(:red)
+    end
   end
 end
 
