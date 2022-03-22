@@ -110,6 +110,29 @@ $ run boom
 stat: cannot stat 'foo': No such file or directory
 ```
 
+### Calling other tasks
+
+One another useful feature is to being able to run tasks arbitrarily from other tasks:
+
+```rb
+task :eslint do
+  shell "npx eslint"
+end
+
+task :flow do
+  shell "npx flow"
+end
+
+task :lint_js do
+  call :eslint
+  call :flow
+end
+```
+
+### Passing arguments
+
+You can pass arguments to your tasks and get them with the `arguments` function. The return value is an array of strings.
+
 ### Functions and interpolation
 
 Interpolation and the use of functions makes it trivial to integrate data inside your tasks. In Ruby, interpolation is as easy and powerful as you can do in JavaScript ([read about template literals](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals)).
@@ -130,24 +153,27 @@ end
 
 > In Ruby, you can forgot about parens when you're calling a function.
 
+> Ruby also have implicit returns: the last value of a function is the one returned. But you can also use `return` if you need to return something that is not the last line of your function.
+
 > Note the `chomp` call after commands. These commands return STDOUT as a string with a trailing newline: `chomp` is used to trim them.
 
-### Calling other tasks
+### Splitting your tasks into multiple files
 
-One another useful feature is to being able to run tasks arbitrarily from other tasks:
+You can use `require` to include other task files, like any other Ruby file:
 
 ```rb
-task :eslint do
-  shell "npx eslint"
+# Runfile.rb
+require "tasks/task1.rb"
+require "tasks/task2.rb"
+
+# tasks/task1.rb
+task :foo do
+  puts "foo"
 end
 
-task :flow do
-  shell "npx flow"
-end
-
-task :lint_js do
-  call :eslint
-  call :flow
+# tasks/task2.rb
+task :bar do
+  puts "bar"
 end
 ```
 
@@ -169,6 +195,23 @@ The available colors are :
 - magenta
 - cyan
 - white
+
+### Interrupting a task
+
+If you have a task that stays open until you hit `CTRL+C`, you probably want to handle correctly the interruption of your task (for example: closing gracefully a running command).
+
+```rb
+task :dev, "Run Meteor in dev mode." do
+  # Run some actions here.
+rescue Interrupt
+  begin
+    # Stop some stuff here.
+  rescue Interrupt
+  end
+end
+```
+
+The double `rescue` is used to avoid having an ugly stack trace printing on STDOUT if you hit `CTRL+C` multiple times.
 
 ### Last word
 
