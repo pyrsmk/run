@@ -3,15 +3,12 @@
 # TODO
 # - add version header and verify version against the one installed + auto-update
 # - auto-completion
-# - how to include other Runfiles: with `require`
-# - note about implicit returns
-# - how to pass parameters: #{ARGV.slice(1..).join(' ')}
-# - better handle CTRL+C from `shell` command: recipe
+# - improve colorization with simple functions: "foo".yellow
 
 require "digest"
 require "open-uri"
 
-VERSION = "0.3.0"
+VERSION = "0.4.0"
 
 @tasks = Hash.new
 
@@ -37,7 +34,7 @@ end
 # ability to interect with the command, contrary to backticks syntax.
 def shell(command)
   puts
-  puts "#{">".colorize(:magenta)} #{command}"
+  puts "#{">".colorize(:yellow)} #{command}"
   puts
   if system(command) === false
     exit 1
@@ -56,6 +53,10 @@ def require_remote(uri)
       puts error.message.colorize(:red)
     end
   end
+end
+
+def arguments
+  ARGV.slice(1..)
 end
 
 ##########################################################################################
