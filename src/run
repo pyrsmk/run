@@ -8,7 +8,7 @@
 require "digest"
 require "open-uri"
 
-VERSION = "0.4.0"
+VERSION = "0.4.1"
 
 @tasks = Hash.new
 
@@ -34,7 +34,7 @@ end
 # ability to interect with the command, contrary to backticks syntax.
 def shell(command)
   puts
-  puts "#{">".colorize(:yellow)} #{command}"
+  puts "#{">".colorize(:cyan)} #{command}"
   puts
   if system(command) === false
     exit 1
