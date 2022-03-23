@@ -4,11 +4,14 @@
 # - add version header and verify version against the one installed + auto-update
 # - auto-completion
 # - improve colorization with simple functions: "foo".yellow
+# - improve require_remote with version support
 
 require "digest"
+require "fileutils"
 require "open-uri"
+require "securerandom"
 
-VERSION = "0.5.0"
+VERSION = "0.5.1"
 
 @tasks = Hash.new
 
