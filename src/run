@@ -8,7 +8,7 @@
 require "digest"
 require "open-uri"
 
-VERSION = "0.4.1"
+VERSION = "0.5.0"
 
 @tasks = Hash.new
 
@@ -33,11 +33,14 @@ end
 # Run a shell command that will fail the tasks if it fails itself. It also add the
 # ability to interect with the command, contrary to backticks syntax.
 def shell(command)
-  puts
-  puts "#{">".colorize(:cyan)} #{command}"
+  puts "#{">".colorize(:green)} #{command}"
   puts
   if system(command) === false
-    exit 1
+    STDERR.puts "> #{command}".colorize(:red)
+    STDERR.puts
+    STDERR.puts "The command has failed with return code: #{$?.exitstatus}.".colorize(:red)
+    STDERR.puts
+    raise Interrupt.new
   end
 end
 
