@@ -11,7 +11,7 @@ require "fileutils"
 require "open-uri"
 require "securerandom"
 
-VERSION = "0.5.1"
+VERSION = "0.6.0"
 
 @tasks = Hash.new
 
@@ -39,10 +39,9 @@ def shell(command)
   puts "#{">".colorize(:green)} #{command}"
   puts
   if system(command) === false
-    STDERR.puts "> #{command}".colorize(:red)
-    STDERR.puts
-    STDERR.puts "The command has failed with return code: #{$?.exitstatus}.".colorize(:red)
-    STDERR.puts
+    puts
+    puts "The command has exited with return code: #{$?.exitstatus}.".colorize(:magenta)
+    puts
     raise Interrupt.new
   end
 end
