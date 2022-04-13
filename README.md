@@ -131,7 +131,20 @@ end
 
 ### Passing arguments
 
-You can pass arguments to your tasks and get them with the `arguments` function. The return value is an array of strings.
+You can pass arguments to your tasks. Those will be accessible with:
+
+```rb
+task :echo do |arguments|
+  puts arguments[0]
+end
+```
+
+This task will output the first argument on STDOUT:
+
+```sh
+> run echo hello
+hello
+```
 
 ### Functions and interpolation
 
