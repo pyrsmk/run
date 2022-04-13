@@ -61,28 +61,44 @@ end
 
 class String
   @@colors = {
-    :black   => 30,
-    :red     => 31,
-    :green   => 32,
-    :yellow  => 33,
-    :blue    => 34,
-    :magenta => 35,
-    :cyan    => 36,
-    :white   => 37,
+    :black          => "30",
+    :red            => "31",
+    :green          => "32",
+    :yellow         => "33",
+    :blue           => "34",
+    :magenta        => "35",
+    :cyan           => "36",
+    :white          => "37",
+    :bright_black   => "30;1",
+    :bright_red     => "31;1",
+    :bright_green   => "32;1",
+    :bright_yellow  => "33;1",
+    :bright_blue    => "34;1",
+    :bright_magenta => "35;1",
+    :bright_cyan    => "36;1",
+    :bright_white   => "37;1",
   }
 
   def colorize(color)
     "\033[#{@@colors[color.to_sym]}m#{self}\033[0m"
   end
 
-  def black;    colorize(:black); end
-  def red;      colorize(:red); end
-  def green;    colorize(:green); end
-  def yellow;   colorize(:yellow); end
-  def blue;     colorize(:blue); end
-  def magenta;  colorize(:magenta); end
-  def cyan;     colorize(:cyan); end
-  def white;    colorize(:white); end
+  def black;          colorize(:black); end
+  def red;            colorize(:red); end
+  def green;          colorize(:green); end
+  def yellow;         colorize(:yellow); end
+  def blue;           colorize(:blue); end
+  def magenta;        colorize(:magenta); end
+  def cyan;           colorize(:cyan); end
+  def white;          colorize(:white); end
+  def bright_black;   colorize(:bright_black); end
+  def bright_red;     colorize(:bright_red); end
+  def bright_green;   colorize(:bright_green); end
+  def bright_yellow;  colorize(:bright_yellow); end
+  def bright_blue;    colorize(:bright_blue); end
+  def bright_magenta; colorize(:bright_magenta); end
+  def bright_cyan;    colorize(:bright_cyan); end
+  def bright_white;   colorize(:bright_white); end
 end
 
 ##########################################################################################
@@ -101,10 +117,10 @@ require "./#{RUNFILE}"
 # Show the help screen if there is no provided task, or if it's explicitly requested.
 if ARGV.size == 0 || (ARGV.size == 1 && ARGV[0] == "help")
   puts
-  puts " run v#{VERSION}"
+  puts " Run v#{VERSION}".bright_blue
   puts
   @tasks.sort.to_h.each do |name, task|
-    puts " #{name}#{" " * (35 - name.size)}#{task[:help]}"
+    puts " #{name}".yellow + (" " * (35 - name.size)) + task[:help]
   end
   exit
 end
