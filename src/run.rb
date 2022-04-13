@@ -116,13 +116,15 @@ contents = URI.parse("https://pyrsmk.fra1.cdn.digitaloceanspaces.com/run/run_lat
 version = /^VERSION = "(\d\.\d\.\d)"$/.match(contents)
 if !version.nil?
   current = VERSION.split "."
-  latest = version.split "."
+  latest = version[1].split "."
   if current[0].to_i < latest[0].to_i ||
      current[1].to_i < latest[1].to_i ||
      current[2].to_i < latest[2].to_i
-    puts "New #{version} version released!".cyan
-    puts "Update with: `wget https://pyrsmk.fra1.cdn.digitaloceanspaces.com/run/" \
-         "run_latest.rb -O ~/.local/bin/run && chmod +x ~/.local/bin/run`".cyan
+    puts "New ".cyan + version[1].yellow + " version released!".cyan
+    puts "Update with: `".cyan +
+         "wget https://pyrsmk.fra1.cdn.digitaloceanspaces.com/run/".yellow +
+         "run_latest.rb -O ~/.local/bin/run && chmod +x ~/.local/bin/run".yellow +
+         "`".cyan
     puts
   end
 end
