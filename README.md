@@ -211,16 +211,14 @@ The available colors are :
 
 ### Interrupting a task
 
-If you have a task that stays open until you hit `CTRL+C`, you probably want to handle correctly the interruption of your task (for example: closing gracefully a running command).
+If you have a task that stays open until you hit `CTRL+C`, you probably want to handle correctly the interruption of it (for example: closing gracefully a connection).
 
 ```rb
 task :dev, "Run Meteor in dev mode." do
   # Run some actions here.
 rescue Interrupt
-  begin
-    # Stop some stuff here.
-  rescue Interrupt
-  end
+ensure
+  # Run clean up actions.
 end
 ```
 
