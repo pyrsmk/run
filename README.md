@@ -211,7 +211,7 @@ require_extension "docker_v1.0.0"
 It is often needed to colorize your messages sent to the user with `puts`. For this matter, Run is natively shipped with basic colorization so you don't need to add dependencies from Rubygems/Bundler (no need to install a whole dev stack, thanks).
 
 ```rb
-puts "Please wait...".colorize(:yellow)
+puts "Please wait...".yellow
 ```
 
 The available colors are :

@@ -1,10 +1,9 @@
 #!/usr/bin/ruby
 
 # TODO
+# - publish system
 # - add version header and verify version against the one installed + auto-update
 # - auto-completion
-# - improve colorization with simple functions: "foo".yellow
-# - improve require_remote with version support
 # - add proper tests
 
 require "digest"
@@ -37,11 +36,11 @@ end
 # Run a shell command that will fail the tasks if it fails itself. It also add the
 # ability to interect with the command, contrary to backticks syntax.
 def shell(command)
-  puts "#{">".colorize(:green)} #{command}"
+  puts "#{">".green} #{command}"
   puts
   if system(command) === false
     puts
-    puts "The command has exited with return code: #{$?.exitstatus}.".colorize(:magenta)
+    puts "The command has exited with return code: #{$?.exitstatus}.".magenta
     puts
     raise Interrupt.new
   end
@@ -54,30 +53,41 @@ def require_remote(uri)
   end
   eval File.read(cache_path)
 rescue error
-  puts "Unable to load #{uri}:".colorize(:red)
-  puts "#{error.class}: #{error.message}".colorize(:red)
+  puts "Unable to load #{uri}:".red
+  puts "#{error.class}: #{error.message}".red
 end
 
 def require_extension(name)
-  require_remote "https://the-origamist.fra1.cdn.digitaloceanspaces.com/run_extensions/#{name}.rb"
+  require_remote "https://the-origamist.fra1.cdn.digitaloceanspaces.com" \
+                 "/run_extensions/#{name}.rb"
 end
 
 ##########################################################################################
 
 class String
+  @@colors = {
+    :black   => 30,
+    :red     => 31,
+    :green   => 32,
+    :yellow  => 33,
+    :blue    => 34,
+    :magenta => 35,
+    :cyan    => 36,
+    :white   => 37,
+  }
+
   def colorize(color)
-    colors = {
-      :black   => 30,
-      :red     => 31,
-      :green   => 32,
-      :yellow  => 33,
-      :blue    => 34,
-      :magenta => 35,
-      :cyan    => 36,
-      :white   => 37,
-    }
-    "\033[#{colors[color.to_sym]}m#{self}\033[0m"
+    "\033[#{@@colors[color.to_sym]}m#{self}\033[0m"
   end
+
+  def black;    colorize(:black); end
+  def red;      colorize(:red); end
+  def green;    colorize(:green); end
+  def yellow;   colorize(:yellow); end
+  def blue;     colorize(:blue); end
+  def magenta;  colorize(:magenta); end
+  def cyan;     colorize(:cyan); end
+  def white;    colorize(:white); end
 end
 
 ##########################################################################################
