@@ -164,7 +164,7 @@ def gid
 end
 
 task :fix_rights, "Fix user rights" do
-  `sudo chown #{uid}:#{gid}`
+  `sudo chown -r #{uid}:#{gid} .`
 end
 ```
 
