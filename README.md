@@ -4,6 +4,10 @@
 
 This project is a proof-of-concept aiming to write concise and powerful tasks.
 
+You don't even have to learn Ruby to being able to use `run`. Just follow the documentation. If there're no available shell commands for what you want to do (saving or loading a file, generating a UUID, making complex requests, matching with a regex, ...), [StackOverflow](https://stackoverflow.com/) is your friend!
+
+Have fun!
+
 ## Notes about Ruby vs Make
 
 Many of you will probably think "What ?! I need to install a new language on my system to use Run ? And I also need yo learn Ruby ?!". To them, I would respond "Hey ! With make it's actually the same, but 100x worse !".
@@ -229,10 +233,10 @@ The available colors are :
 
 ### Interrupting a task
 
-If you have a task that stays open until you hit `CTRL+C`, you probably want to handle correctly the interruption of it (for example: closing gracefully a connection).
+If you have a task that stays open until you hit `CTRL+C`, you probably want to handle correctly the interruption of it (for example: stopping gracefully a server). To handle this case, we need to catch the Interrupt exception quietly and run important tasks in the `ensure` block.
 
 ```rb
-task :dev, "Run Meteor in dev mode." do
+task :dev, "Run server in development mode" do
   # Run some actions here.
 rescue Interrupt
 ensure
@@ -242,8 +246,9 @@ end
 
 The double `rescue` is used to avoid having an ugly stack trace printing on STDOUT if you hit `CTRL+C` multiple times.
 
-## Last word
+## TODO
 
-You don't even have to learn Ruby to being able to use `run`. Just follow the documentation, and find what you need when you need it, if there're no available shell commands for that (save or load a file, generate a UUID, making complex requests, matching with a regex, ...).
-
-Have fun!
+- publish system
+- add version header and verify version against the one installed + auto-update
+- auto-completion
+- add proper tests

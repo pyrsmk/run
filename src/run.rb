@@ -1,11 +1,5 @@
 #!/usr/bin/ruby
 
-# TODO
-# - publish system
-# - add version header and verify version against the one installed + auto-update
-# - auto-completion
-# - add proper tests
-
 require "digest"
 require "fileutils"
 require "open-uri"
