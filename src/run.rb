@@ -1,11 +1,11 @@
 #!/usr/bin/ruby
 
 # TODO
-# - require_runfile: "https://the-origamist.fra1.digitaloceanspaces.com/runfiles/#{file}.rb"
 # - add version header and verify version against the one installed + auto-update
 # - auto-completion
 # - improve colorization with simple functions: "foo".yellow
 # - improve require_remote with version support
+# - add proper tests
 
 require "digest"
 require "fileutils"
@@ -48,17 +48,18 @@ def shell(command)
 end
 
 def require_remote(uri)
-  cache_path = "/tmp/#{Digest::MD5.hexdigest(uri)}"
-  begin
+  cache_path = "/tmp/run_#{Digest::MD5.hexdigest(uri)}"
+  if !File.exists? cache_path
     File.write(cache_path, URI.parse(uri).open.read)
-  ensure
-    raise "Unable to load #{uri}" if !File.exists? cache_path
-    begin
-      eval File.read(cache_path)
-    rescue SyntaxError => error
-      puts error.message.colorize(:red)
-    end
   end
+  eval File.read(cache_path)
+rescue error
+  puts "Unable to load #{uri}:".colorize(:red)
+  puts "#{error.class}: #{error.message}".colorize(:red)
+end
+
+def require_extension(name)
+  require_remote "https://the-origamist.fra1.cdn.digitaloceanspaces.com/run_extensions/#{name}.rb"
 end
 
 ##########################################################################################

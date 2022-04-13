@@ -190,6 +190,22 @@ task :bar do
 end
 ```
 
+### Requiring remote files
+
+If needed, you can require remote Ruby files with `require_remote`. Be careful, this file will be cached indefinitely. If you want to re-download it, we advise you to append a version number to it. This is for performance considerations and to avoid impacting codebases with an updated remote file with breaking changes or bugs.
+
+```rb
+require_remote "https://raw.githubusercontent.com/some_user/some_repo/master/src/some_file.rb"
+```
+
+> If you REALLY need to force a re-download of the same file, you can remove all cached files with `rm /tmp/run_*`.
+
+A special command is available to require [Run extensions](https://github.com/pyrsmk/run_extensions). For example:
+
+```rb
+require_extension "docker_v1.0.0"
+```
+
 ### Colorization
 
 It is often needed to colorize your messages sent to the user with `puts`. For this matter, Run is natively shipped with basic colorization so you don't need to add dependencies from Rubygems/Bundler (no need to install a whole dev stack, thanks).
@@ -209,6 +225,8 @@ The available colors are :
 - cyan
 - white
 
+## Recipes
+
 ### Interrupting a task
 
 If you have a task that stays open until you hit `CTRL+C`, you probably want to handle correctly the interruption of it (for example: closing gracefully a connection).
@@ -224,7 +242,7 @@ end
 
 The double `rescue` is used to avoid having an ugly stack trace printing on STDOUT if you hit `CTRL+C` multiple times.
 
-### Last word
+## Last word
 
 You don't even have to learn Ruby to being able to use `run`. Just follow the documentation, and find what you need when you need it, if there're no available shell commands for that (save or load a file, generate a UUID, making complex requests, matching with a regex, ...).
 
