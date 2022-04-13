@@ -253,8 +253,3 @@ You'll need to install Bundler with `gem install bundler` because the Runfile ne
 ### Publish
 
 To being able to publish to the CDN you'll need to create a `.env` file and define the `SPACES_SECRET` variable.
-
-## TODO
-
-- auto-completion
-- add proper tests
