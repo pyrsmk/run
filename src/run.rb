@@ -52,7 +52,7 @@ rescue error
 end
 
 def require_extension(name)
-  require_remote "https://the-origamist.fra1.cdn.digitaloceanspaces.com" \
+  require_remote "https://pyrsmk.fra1.cdn.digitaloceanspaces.com" \
                  "/run_extensions/#{name}.rb"
 end
 

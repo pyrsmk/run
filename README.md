@@ -29,7 +29,7 @@ Install Ruby with the package manager of your environment, or download it from [
 When you're done, download the source file to a directory in your `PATH`, like `~/.local/bin/`.
 
 ```sh
-wget https://the-origamist.fra1.cdn.digitaloceanspaces.com/run/run_latest.rb -O ~/.local/bin/run
+wget https://pyrsmk.fra1.cdn.digitaloceanspaces.com/run/run_latest.rb -O ~/.local/bin/run
 chmod +x ~/.local/bin/run
 ```
 
@@ -244,11 +244,18 @@ ensure
 end
 ```
 
-The double `rescue` is used to avoid having an ugly stack trace printing on STDOUT if you hit `CTRL+C` multiple times.
+## Development
+
+### Prerequisites
+
+You'll need to install Bundler with `gem install bundler` because the Runfile need some gems to be installed with `bundle install`.
+
+### Publish
+
+To being able to publish to the CDN you'll need to create a `.env` file and define the `SPACES_SECRET` variable.
 
 ## TODO
 
-- publish system
 - add version header and verify version against the one installed + auto-update
 - auto-completion
 - add proper tests
