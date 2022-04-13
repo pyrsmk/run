@@ -22,10 +22,10 @@ Ruby have a comprehensive and exhaustive API, with a very concise syntax and goo
 
 Install Ruby with the package manager of your environment, or download it from [the official page](https://www.ruby-lang.org/en/downloads/).
 
-When you're done, download the source file to a directory in your PATH, for example:
+When you're done, download the source file to a directory in your `PATH`, like `~/.local/bin/`.
 
 ```sh
-wget https://raw.githubusercontent.com/pyrsmk/run/master/src/run -O ~/.local/bin/run
+wget https://the-origamist.fra1.cdn.digitaloceanspaces.com/run/run_latest.rb -O ~/.local/bin/run
 chmod +x ~/.local/bin/run
 ```
 
