@@ -26,7 +26,7 @@ Ruby have a comprehensive and exhaustive API, with a very concise syntax and goo
 
 Install Ruby with the package manager of your environment, or download it from [the official page](https://www.ruby-lang.org/en/downloads/).
 
-When you're done, download the source file to a directory in your `PATH`, like `~/.local/bin/`.
+When you're done, download the source file to a directory in your `PATH`. We recommend using the `~/.local/bin/` directory.
 
 ```sh
 wget https://pyrsmk.fra1.cdn.digitaloceanspaces.com/run/run_latest.rb -O ~/.local/bin/run
@@ -256,6 +256,5 @@ To being able to publish to the CDN you'll need to create a `.env` file and defi
 
 ## TODO
 
-- add version header and verify version against the one installed + auto-update
 - auto-completion
 - add proper tests

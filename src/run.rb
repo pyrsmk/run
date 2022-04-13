@@ -108,6 +108,24 @@ if ARGV.size == 0 || (ARGV.size == 1 && ARGV[0] == "help")
   exit
 end
 
+# Verify the latest release version.
+contents = URI.parse("https://pyrsmk.fra1.cdn.digitaloceanspaces.com/run/run_latest.rb")
+              .open
+              .read
+version = /^VERSION = "(\d\.\d\.\d)"$/.match(contents)
+if !version.nil?
+  current = VERSION.split "."
+  latest = version.split "."
+  if current[0].to_i < latest[0].to_i ||
+     current[1].to_i < latest[1].to_i ||
+     current[2].to_i < latest[2].to_i
+    puts "New #{version} version released!".cyan
+    puts "Update with: `wget https://pyrsmk.fra1.cdn.digitaloceanspaces.com/run/" \
+         "run_latest.rb -O ~/.local/bin/run && chmod +x ~/.local/bin/run`".cyan
+    puts
+  end
+end
+
 # Run the requested tasks.
 name = ARGV[0].to_sym
 if !@tasks.include?(name)
