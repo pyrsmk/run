@@ -98,14 +98,6 @@ require "./#{RUNFILE}"
 
 ##########################################################################################
 
-# Auto-completion support.
-comp = proc { |s| @tasks.to_h.keys.grep(/^#{Regexp.escape(s)}/) }
-Readline.completion_append_character = " "
-Readline.completion_proc = comp
-while line = Readline.readline('> ', true)
-  p line
-end
-
 # Show the help screen if there is no provided task, or if it's explicitly requested.
 if ARGV.size == 0 || (ARGV.size == 1 && ARGV[0] == "help")
   puts
