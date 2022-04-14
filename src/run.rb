@@ -31,7 +31,7 @@ end
 # Run a shell command that will fail the tasks if it fails itself. It also add the
 # ability to interect with the command, contrary to backticks syntax.
 def shell(command)
-  puts "#{">".green} #{command}"
+  puts "#{">".yellow} #{command}"
   puts
   if system(command) === false
     puts
@@ -47,9 +47,10 @@ def require_remote(uri)
     File.write(cache_path, URI.parse(uri).open.read)
   end
   eval File.read(cache_path)
-rescue error
+rescue => error
   puts "Unable to load #{uri}:".red
   puts "#{error.class}: #{error.message}".red
+  exit
 end
 
 def require_extension(name)
