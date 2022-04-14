@@ -137,10 +137,12 @@ if !version.nil?
      current[1].to_i < latest[1].to_i ||
      current[2].to_i < latest[2].to_i
     puts "New ".cyan + version[1].yellow + " version released!".cyan
-    puts "Update with: `".cyan +
-         "wget https://pyrsmk.fra1.cdn.digitaloceanspaces.com/run/".yellow +
-         "run_latest.rb -O ~/.local/bin/run && chmod +x ~/.local/bin/run".yellow +
-         "`".cyan
+    puts
+    puts "You can upgrade with:".cyan
+    puts "wget https://pyrsmk.fra1.cdn.digitaloceanspaces.com/run/".yellow +
+         "run_latest.rb -O ~/.local/bin/run && chmod +x ~/.local/bin/run".yellow
+    puts
+    puts "Be careful: migrate your Runfile when upgrading to a major version.".cyan
     puts
   end
 end
