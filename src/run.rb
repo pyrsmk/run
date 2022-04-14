@@ -120,8 +120,14 @@ if ARGV.size == 0 || (ARGV.size == 1 && ARGV[0] == "help")
   puts
   puts " Run v#{VERSION}".bright_blue
   puts
+  # Compute the max task names size.
+  max_size = @tasks.keys.reduce(0) do |max, name|
+    next max if name.size <= max
+    name.size
+  end
+  # Display each task and their help.
   @tasks.sort.to_h.each do |name, task|
-    puts " #{name}".yellow + (" " * (35 - name.size)) + task[:help]
+    puts " #{name}".yellow + (" " * (max_size - name.size + 4)) + task[:help]
   end
   exit
 end
