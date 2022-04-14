@@ -24,8 +24,8 @@ def task(name, help = "", &block)
 end
 
 # Call a task.
-def call(name, arguments)
-  @tasks[name][:block].call arguments
+def call(name, *arguments)
+  @tasks[name][:block].call *arguments
 end
 
 # Run a shell command that will fail the tasks if it fails itself. It also add the
@@ -159,4 +159,4 @@ if !@tasks.include?(name)
   puts "Unknown '#{name}' task"
   exit 1
 end
-call name, ARGV.slice(1..)
+call name, *ARGV.slice(1..)
