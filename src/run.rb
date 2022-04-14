@@ -127,25 +127,30 @@ if ARGV.size == 0 || (ARGV.size == 1 && ARGV[0] == "help")
 end
 
 # Verify the latest release version.
-contents = URI.parse("https://pyrsmk.fra1.cdn.digitaloceanspaces.com/run/run_latest.rb")
-              .open
-              .read
-version = /^VERSION = "(\d\.\d\.\d)"$/.match(contents)
-if !version.nil?
-  current = VERSION.split "."
-  latest = version[1].split "."
-  if current[0].to_i < latest[0].to_i ||
-     current[1].to_i < latest[1].to_i ||
-     current[2].to_i < latest[2].to_i
-    puts "New ".cyan + version[1].yellow + " version released!".cyan
-    puts
-    puts "You can upgrade with:".cyan
-    puts "wget https://pyrsmk.fra1.cdn.digitaloceanspaces.com/run/".yellow +
-         "run_latest.rb -O ~/.local/bin/run && chmod +x ~/.local/bin/run".yellow
-    puts
-    puts "Be careful: migrate your Runfile when upgrading to a major version.".cyan
-    puts
+Thread.new do
+  contents = URI.parse("https://pyrsmk.fra1.cdn.digitaloceanspaces.com/run/run_latest.rb")
+                .open
+                .read
+  version = /^VERSION = "(\d\.\d\.\d)"$/.match(contents)
+  if !version.nil?
+    next if File.exists?("/tmp/run_dismiss_#{version}")
+    current = VERSION.split "."
+    latest = version[1].split "."
+    if current[0].to_i < latest[0].to_i ||
+      current[1].to_i < latest[1].to_i ||
+      current[2].to_i < latest[2].to_i
+      puts "New ".cyan + version[1].yellow + " version released!".cyan
+      puts
+      puts "You can upgrade with:".cyan
+      puts "wget https://pyrsmk.fra1.cdn.digitaloceanspaces.com/run/".yellow +
+           "run_latest.rb -O ~/.local/bin/run && chmod +x ~/.local/bin/run".yellow
+      puts
+      puts "Be careful: migrate your Runfile when upgrading to a major version.".cyan
+      puts
+      File.write "/tmp/run_dismiss_#{version}", ""
+    end
   end
+rescue
 end
 
 # Run the requested tasks.
