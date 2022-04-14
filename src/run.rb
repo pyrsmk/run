@@ -31,7 +31,7 @@ end
 # Run a shell command that will fail the tasks if it fails itself. It also add the
 # ability to interect with the command, contrary to backticks syntax.
 def shell(command)
-  puts "#{">".yellow} #{command}"
+  puts ">".bright_blue + " #{command}".bright_white
   puts
   if system(command) === false
     puts
