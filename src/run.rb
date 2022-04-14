@@ -42,7 +42,7 @@ def shell(command)
 end
 
 def require_remote(uri)
-  cache_path = "/tmp/run_#{Digest::MD5.hexdigest(uri)}"
+  cache_path = "/tmp/run_cache_#{Digest::MD5.hexdigest(uri)}"
   if !File.exists? cache_path
     File.write(cache_path, URI.parse(uri).open.read)
   end
