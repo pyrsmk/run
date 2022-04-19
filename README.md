@@ -29,7 +29,7 @@ Install Ruby with the package manager of your environment, or download it from [
 When you're done, download the source file to a directory in your `PATH`. We recommend using the `~/.local/bin/` directory.
 
 ```sh
-wget https://pyrsmk.fra1.cdn.digitaloceanspaces.com/run/run_latest.rb -O ~/.local/bin/run
+wget https://pyrsmk.fra1.digitaloceanspaces.com/run/run_latest.rb -O ~/.local/bin/run
 chmod +x ~/.local/bin/run
 ```
 
