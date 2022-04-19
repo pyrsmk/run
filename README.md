@@ -24,7 +24,7 @@ Ruby have a comprehensive and exhaustive API, with a very concise syntax and goo
 
 ## Install
 
-Install Ruby with the package manager of your environment, or download it from [the official page](https://www.ruby-lang.org/en/downloads/).
+Install Ruby 2.7 with the package manager of your environment, or download it from [the official page](https://www.ruby-lang.org/en/downloads/).
 
 When you're done, download the source file to a directory in your `PATH`. We recommend using the `~/.local/bin/` directory.
 
