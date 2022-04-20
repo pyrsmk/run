@@ -6,7 +6,7 @@ require "open-uri"
 require "readline"
 require "securerandom"
 
-VERSION = "1.0.0"
+VERSION = "1.1.0"
 
 @tasks = Hash.new
 
@@ -24,8 +24,8 @@ def task(name, help = "", &block)
 end
 
 # Call a task.
-def call(name, *arguments)
-  @tasks[name][:block].call *arguments
+def call(name, *arguments, **options)
+  @tasks[name][:block].call *arguments, **options
 end
 
 # Run a shell command that will fail the tasks if it fails itself. It also add the
