@@ -6,7 +6,7 @@ require "open-uri"
 require "readline"
 require "securerandom"
 
-VERSION = "1.1.0"
+VERSION = "1.1.1"
 
 @tasks = Hash.new
 
@@ -134,7 +134,7 @@ end
 
 # Verify the latest release version.
 Thread.new do
-  contents = URI.parse("https://pyrsmk.fra1.cdn.digitaloceanspaces.com/run/run_latest.rb")
+  contents = URI.parse("https://pyrsmk.fra1.digitaloceanspaces.com/run/run_latest.rb")
                 .open
                 .read
   version = /^VERSION = "(\d\.\d\.\d)"$/.match(contents)
@@ -148,7 +148,7 @@ Thread.new do
       puts "New ".cyan + version[1].yellow + " version released!".cyan
       puts
       puts "You can upgrade with:".cyan
-      puts "wget https://pyrsmk.fra1.cdn.digitaloceanspaces.com/run/".yellow +
+      puts "wget https://pyrsmk.fra1.digitaloceanspaces.com/run/".yellow +
            "run_latest.rb -O ~/.local/bin/run && chmod +x ~/.local/bin/run".yellow
       puts
       puts "Be careful: migrate your Runfile when upgrading to a major version.".cyan
