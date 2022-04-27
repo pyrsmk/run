@@ -6,7 +6,7 @@ require "open-uri"
 require "readline"
 require "securerandom"
 
-VERSION = "1.1.1"
+VERSION = "1.1.2"
 
 @tasks = Hash.new
 
@@ -165,4 +165,8 @@ if !@tasks.include?(name)
   puts "Unknown '#{name}' task"
   exit 1
 end
-call name, *ARGV.slice(1..)
+begin
+  call name, *ARGV.slice(1..)
+rescue => e
+  puts e.message.red
+end
