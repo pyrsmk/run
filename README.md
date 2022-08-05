@@ -10,7 +10,7 @@ Have fun!
 
 ## Notes about Ruby vs Make
 
-Many of you will probably think "What ?! I need to install a new language on my system to use Run ? And I also need yo learn Ruby ?!". To them, I would respond "Hey ! With make it's actually the same, but 100x worse !".
+Many of you will probably think "What ?! I need to install a new language on my system to use Run ? And I also need to learn Ruby ?!". To them, I would respond "Hey ! With make it's actually the same, but 100x worse !".
 
 ## Why ?
 
