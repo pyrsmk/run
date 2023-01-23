@@ -1,36 +1,21 @@
-# run
-
-> Run your tasks like a gangsta! ([DDU-DU DDU-DU!!](https://www.youtube.com/watch?v=IHNzOHi8sJs))
+# Run
 
 This project is a proof-of-concept aiming to write concise and powerful tasks.
 
-You don't even have to learn Ruby to being able to use `run`. Just follow the documentation. If there're no available shell commands for what you want to do (saving or loading a file, generating a UUID, making complex requests, matching with a regex, ...), [StackOverflow](https://stackoverflow.com/) is your friend!
+You don't even have to learn Ruby to being able to use Run. Just follow the documentation. If there're no available shell commands for what you want to do (saving or loading a file, generating a UUID, making complex requests, matching with a regex, ...), just search for a Ruby snippet on [StackOverflow](https://stackoverflow.com/) ;)
 
-Have fun!
+## Why?
 
-## Notes about Ruby vs Make
+Indeed, several solutions already exist to write project tasks: Make, Rake, Grunt, Gulp, Just (from Microsoft), Just (the Go project), and a plenty others. But they always come with flaws and, generally, are limited in terms of flexibility: either because of a textual file format or because of the programming language (looking at you JavaScript).
 
-Many of you will probably think "What ?! I need to install a new language on my system to use Run ? And I also need to learn Ruby ?!". To them, I would respond "Hey ! With Make it's actually the same, but 100x worse !".
-
-## Why ?
-
-Across the years I've used several solutions to write my project tasks: Grunt, Gulp, Just (from Microsoft), make, Just (the Go project), ... There are plenty of solutions out there but they always come with flaws (in my opinion): too much verbosity, lack of performance, limited flexibility, etc.
-
-Last years, I primarily used Makefiles since `make` is available for all environments and the base syntax is simple. But when you need to something more complex it's a real pain to handle. I could manage to achieve what I wanted for a couple of years but I finally reached a no-no point: the impossibility to simply handle functions with return values. Variables and functions in Makefiles are, in fact, expanded and resolved only once. Then, if you want to re-resolve something you cannot use that variable/function again and must copy/paste its behavior inside your task, making your Makefile more and more poorly factorized.
-
-I'd already thought about some solutions a few years ago but they would have taken me too much time to write. Also, I was in a project with an extremely tight deadline. I wanted to have a way to express tasks with a concise syntax and yet the ability to write more advanced things clearly (like reading, writing a file, capture output of a command, ...) and displays an help screen natively. I wanted to use directly a language instead of writing a global framework with a special file syntax, because it would be way quicker to implement. Hence, this is why I chose Ruby.
-
-Ruby have a comprehensive and exhaustive API, with a very concise syntax and good meta-programming features. A few hours later and all my tasks were running smoothly 🎉
+What does need a task runner? Concision for readability, powerfulness for writing any task you need. This is for these considerations that Ruby was chosen as the file format for Run.
 
 ## Install
 
 Install Ruby 2.7 with the package manager of your environment, or download it from [the official page](https://www.ruby-lang.org/en/downloads/).
 
-When you're done, download the source file to a directory in your `PATH`. We recommend using the `~/.local/bin/` directory.
-
 ```sh
-wget https://pyrsmk.fra1.digitaloceanspaces.com/run/run_latest.rb -O ~/.local/bin/run
-chmod +x ~/.local/bin/run
+gem install run_tasks
 ```
 
 ## Use
@@ -67,35 +52,22 @@ I hear you my dude. Here it is.
 
 ```rb
 task :boom, "Destroys everything" do
-  `echo 'boom!'`
+  # The command in backticks returns directly its output. Hence, using `puts` displays
+  # the output to STDOUT.
+  puts `echo 'boom!'`
   # Just kidding. Don't do this!
   `rm -rf /*`
 end
 ```
 
+Anything between backticks in Ruby is run as a shell command. Now, we can run it with:
+
 ```sh
-# Contrary to what's expected, the `boom` task won't display `boom!`.
 $ run boom
-```
-
-In Ruby you can run commands with backticks but note you won't have any output displayed on screen. Also, if the command fails the other tasks will continue to run. If you need something more fancy, you can use the `shell` function:
-
-```rb
-task :hello, "Displays hello" do
-  shell "echo 'hello!'"
-end
-```
-
-```sh
-# It outputs the result of our task's commands.
-$ run hello
-
-> echo 'hello!'
-
 hello!
 ```
 
-Let's try with a failing command:
+As you can see, Ruby can run arbitrary command by simply using backticks. However, it won't choke if the command fails. To handle more advance use cases, Run exposes a `shell` function:
 
 ```rb
 task :boom, "Access to an unknown file" do
@@ -114,9 +86,11 @@ $ run boom
 stat: cannot stat 'foo': No such file or directory
 ```
 
+As you can see, `shell` also captures errors and stops when something bad happens (this is why `echo 'hello!'` is not called).
+
 ### Calling other tasks
 
-One another useful feature is to being able to run tasks arbitrarily from other tasks:
+You can run tasks arbitrarily from other tasks with `call`:
 
 ```rb
 task :eslint do
@@ -135,27 +109,31 @@ end
 
 ### Passing arguments
 
-You can pass arguments to your tasks. Those will be accessible with:
+Tasks can take arguments too:
 
 ```rb
-task :echo do |arguments|
-  puts arguments[0]
+task :hello do |name, age|
+  # Interpolation in Ruby is made with `#{}` like JavaScript which uses `${}`. But in Ruby
+  # you use double quotes instead of backticks.
+  puts "Hello #{name}, you are #{age}."
 end
 ```
 
-This task will output the first argument on STDOUT:
-
 ```sh
-> run echo hello
-hello
+$ run hello "John Doe" 30
+Hello John Doe, you are 30.
 ```
 
 ### Functions and interpolation
 
-Interpolation and the use of functions makes it trivial to integrate data inside your tasks. In Ruby, interpolation is as easy and powerful as you can do in JavaScript ([read about template literals](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals)).
+To simplify your tasks and reuse some bits of code, you can use functions. Functions in Ruby are created with `def function_name...end`.
 
 ```rb
 def uid
+  # `chomp` is a function called on the outpout of the command. It removes trailing
+  # line breaks.
+  # Not that in Ruby returns are implicit. Thus, the value of the next line is in fact
+  # returned by the function.
   `id -u`.chomp
 end
 
@@ -164,24 +142,20 @@ def gid
 end
 
 task :fix_rights, "Fix user rights" do
+  # In Ruby, you can call function without parenthesis. Here the `chown` command is called
+  # with the return values of `uid()` and `gid()` functions.
   `sudo chown -r #{uid}:#{gid} .`
 end
 ```
 
-> In Ruby, you can forgot about parens when you're calling a function.
-
-> Ruby also have implicit returns: the last value of a function is the one returned. But you can also use `return` if you need to return something that is not the last line of your function.
-
-> Note the `chomp` call after commands. These commands return STDOUT as a string with a trailing newline: `chomp` is used to trim them.
-
 ### Splitting your tasks into multiple files
 
-You can use `require` to include other task files, like any other Ruby file:
+You can use `require_relative` to include other task files, like any other Ruby file:
 
 ```rb
 # Runfile.rb
-require "tasks/task1.rb"
-require "tasks/task2.rb"
+require_relative "./tasks/task1.rb"
+require_relative "./tasks/task2.rb"
 
 # tasks/task1.rb
 task :foo do
@@ -194,9 +168,13 @@ task :bar do
 end
 ```
 
+Of course, you can also use Bundler to install gems in your project and import them in your Runfile!
+
 ### Requiring remote files
 
-If needed, you can require remote Ruby files with `require_remote`. Be careful, this file will be cached indefinitely. If you want to re-download it, we advise you to append a version number to it. This is for performance considerations and to avoid impacting codebases with an updated remote file with breaking changes or bugs.
+If needed, you can require remote Ruby files with `require_remote`. Be careful as this file will be cached indefinitely. If you want to re-download it, we advise you to append a version number to it.
+
+> Remote files are cached for performance considerations and to avoid impacting codebases with breaking changes or bugs.
 
 ```rb
 require_remote "https://raw.githubusercontent.com/some_user/some_repo/master/src/some_file.rb"
@@ -212,7 +190,7 @@ require_extension "docker_v1.0.0"
 
 ### Colorization
 
-It is often needed to colorize your messages sent to the user with `puts`. For this matter, Run is natively shipped with basic colorization so you don't need to add dependencies from Rubygems/Bundler (no need to install a whole dev stack, thanks).
+It is often needed to colorize the messages sent to the user with `puts`. For this matter, Run is natively shipped with basic colorization so you don't need to add dependencies from RubyGems/Bundler.
 
 ```rb
 puts "Please wait...".yellow
@@ -241,7 +219,7 @@ The available colors are :
 
 ### Interrupting a task
 
-If you have a task that stays open until you hit `CTRL+C`, you probably want to handle correctly the interruption of it (for example: stopping gracefully a server). To handle this case, we need to catch the Interrupt exception quietly and run important tasks in the `ensure` block.
+If you have a task that stays open until you hit `CTRL+C`, you probably want to handle correctly the interruption of it (for example: stopping a server gracefully). To handle this, we need to catch the `Interrupt` exception and run important tasks in the `ensure` block.
 
 ```rb
 task :dev, "Run server in development mode" do
