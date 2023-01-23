@@ -4,9 +4,10 @@ require "digest"
 require "fileutils"
 require "open-uri"
 require "readline"
+require "rubygems"
 require "securerandom"
 
-VERSION = "1.1.2"
+VERSION = Gem::Specification::load("#{__dir__}/../run.gemspec").version
 
 @tasks = Hash.new
 
@@ -134,26 +135,22 @@ end
 
 # Verify the latest release version.
 Thread.new do
-  contents = URI.parse("https://pyrsmk.fra1.digitaloceanspaces.com/run/run_latest.rb")
+  contents = URI.parse("https://raw.githubusercontent.com/pyrsmk/run/master/run.gemspec")
                 .open
                 .read
-  version = /^VERSION = "(\d\.\d\.\d)"$/.match(contents)
+  version = /^\s*s.version\s*=\s*"(.+?)"\s*$/.match(contents)
   if !version.nil?
     next if File.exists?("/tmp/run_dismiss_#{version}")
     current = VERSION.split "."
     latest = version[1].split "."
     if current[0].to_i < latest[0].to_i ||
-      current[1].to_i < latest[1].to_i ||
-      current[2].to_i < latest[2].to_i
-      puts "New ".cyan + version[1].yellow + " version released!".cyan
-      puts
-      puts "You can upgrade with:".cyan
-      puts "wget https://pyrsmk.fra1.digitaloceanspaces.com/run/".yellow +
-           "run_latest.rb -O ~/.local/bin/run && chmod +x ~/.local/bin/run".yellow
-      puts
-      puts "Be careful: migrate your Runfile when upgrading to a major version.".cyan
-      puts
-      File.write "/tmp/run_dismiss_#{version}", ""
+       current[1].to_i < latest[1].to_i ||
+       current[2].to_i < latest[2].to_i
+       puts "New ".cyan + version[1].yellow + " version released!".cyan
+       puts
+       puts "You can upgrade with:".cyan + "gem update run_tasks".yellow
+       puts
+       File.write "/tmp/run_dismiss_#{version}", ""
     end
   end
 rescue
