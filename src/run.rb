@@ -7,57 +7,9 @@ require "readline"
 require "rubygems"
 require "securerandom"
 
-VERSION = Gem::Specification::load("#{__dir__}/../run.gemspec").version
-
-@tasks = Hash.new
-
-# Define a task.
-def task(name, help = "", &block)
-  if !name.is_a?(Symbol)
-    puts "first task parameter must be a symbol"
-    exit 1
-  end
-  if !help.is_a?(String)
-    puts "second task parameter must be a string"
-    exit 1
-  end
-  @tasks.store(name, { :help => help, :block => block })
-end
-
-# Call a task.
-def call(name, *arguments, **options)
-  @tasks[name][:block].call *arguments, **options
-end
-
-# Run a shell command that will fail the tasks if it fails itself. It also add the
-# ability to interect with the command, contrary to backticks syntax.
-def shell(command)
-  puts ">".bright_blue + " #{command}".bright_white
-  puts
-  if system(command) === false
-    puts
-    puts "The command has exited with return code: #{$?.exitstatus}.".magenta
-    puts
-    raise Interrupt.new
-  end
-end
-
-def require_remote(uri)
-  cache_path = "/tmp/run_cache_#{Digest::MD5.hexdigest(uri)}"
-  if !File.exists? cache_path
-    File.write(cache_path, URI.parse(uri).open.read)
-  end
-  eval File.read(cache_path)
-rescue => error
-  puts "Unable to load #{uri}:".red
-  puts "#{error.class}: #{error.message}".red
-  exit
-end
-
-def require_extension(name)
-  require_remote "https://pyrsmk.fra1.cdn.digitaloceanspaces.com" \
-                 "/run_extensions/#{name}.rb"
-end
+GEM = Gem::Specification::load("#{__dir__}/../run.gemspec")
+VERSION = GEM.version
+HOMEPAGE = GEM.homepage
 
 ##########################################################################################
 
@@ -105,14 +57,76 @@ end
 
 ##########################################################################################
 
+@tasks = Hash.new
+
+# Define a task.
+def task(name, help = "", &block)
+  if !name.is_a?(Symbol)
+    puts "first task parameter must be a symbol"
+    exit 6
+  end
+  if !help.is_a?(String)
+    puts "second task parameter must be a string"
+    exit 6
+  end
+  @tasks.store(name, { :help => help, :block => block })
+end
+
+# Call a task.
+def call(name, *arguments, **options)
+  @tasks[name][:block].call *arguments, **options
+end
+
+# Run a shell command.
+def shell(command)
+  puts ">".bright_blue + " #{command}".bright_white
+  puts
+  case system(command)
+  when false
+    puts
+    puts "The command has exited with return code: #{$?.exitstatus}.".magenta
+    puts
+    raise Interrupt.new
+  when nil
+    puts
+    puts "The command has failed.".magenta
+    puts
+    raise Interrupt.new
+  end
+end
+
+def require_remote(uri)
+  cache_path = "/tmp/run_cache_#{Digest::MD5.hexdigest(uri)}"
+  if !File.exists? cache_path
+    File.write(cache_path, URI.parse(uri).open.read)
+  end
+  eval File.read(cache_path)
+rescue => error
+  puts "Unable to load #{uri}:".red
+  puts "#{error.class}: #{error.message}".red
+  exit 8
+end
+
+def require_extension(name)
+  require_remote "https://pyrsmk.fra1.cdn.digitaloceanspaces.com" \
+                 "/run_extensions/#{name}.rb"
+end
+
+##########################################################################################
+
 RUNFILE = "Runfile.rb"
 
 if !File.exists?(RUNFILE)
   puts "#{RUNFILE} does not exist"
-  exit 1
+  exit 7
 end
 
-require "./#{RUNFILE}"
+begin
+  require "./#{RUNFILE}"
+rescue SyntaxError
+  puts "The Runfile contains a syntax error.".red
+  exit 5
+end
 
 ##########################################################################################
 
@@ -135,7 +149,7 @@ end
 
 # Verify the latest release version.
 Thread.new do
-  contents = URI.parse("https://raw.githubusercontent.com/pyrsmk/run/master/run.gemspec")
+  contents = URI.parse("#{HOMEPAGE}/master/run.gemspec")
                 .open
                 .read
   version = /^\s*s.version\s*=\s*"(.+?)"\s*$/.match(contents)
@@ -156,14 +170,17 @@ Thread.new do
 rescue
 end
 
-# Run the requested tasks.
+# Run the requested task.
 name = ARGV[0].to_sym
 if !@tasks.include?(name)
   puts "Unknown '#{name}' task"
-  exit 1
+  exit 2
 end
 begin
   call name, *ARGV.slice(1..)
-rescue => e
-  puts e.message.red
+rescue Interrupt
+  exit 3
+rescue => error
+  puts error.message.red
+  exit 4
 end

@@ -230,6 +230,19 @@ ensure
 end
 ```
 
+## Exit codes
+
+Run can exit with several different codes:
+
+- 1: Run has exited abnormally.
+- 2: The required task does not exist.
+- 3: Unhandled Interrupt error coming from a failed shell command.
+- 4: An error has been raised in the Runfile.
+- 5: The Runfile contains a syntax error.
+- 6: Task parameters are invalid.
+- 7: Runfile not found.
+- 8: Unable to load a remote file.
+
 ## Development
 
 ### Prerequisites
