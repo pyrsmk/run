@@ -9,6 +9,11 @@ require "securerandom"
 
 ##########################################################################################
 
+require_relative "./run/markdown"
+require_relative "./run/string"
+
+##########################################################################################
+
 GEMSPEC_PATH = "#{__dir__}/../run_tasks.gemspec"
 GEM = if File.exist?(GEMSPEC_PATH)
         Gem::Specification::load(GEMSPEC_PATH) # Development.
@@ -17,50 +22,6 @@ GEM = if File.exist?(GEMSPEC_PATH)
       end
 VERSION = GEM&.version
 HOMEPAGE = GEM&.homepage
-
-##########################################################################################
-
-class String
-  @@colors = {
-    :black          => "30",
-    :red            => "31",
-    :green          => "32",
-    :yellow         => "33",
-    :blue           => "34",
-    :magenta        => "35",
-    :cyan           => "36",
-    :white          => "37",
-    :bright_black   => "30;1",
-    :bright_red     => "31;1",
-    :bright_green   => "32;1",
-    :bright_yellow  => "33;1",
-    :bright_blue    => "34;1",
-    :bright_magenta => "35;1",
-    :bright_cyan    => "36;1",
-    :bright_white   => "37;1",
-  }
-
-  def colorize(color)
-    "\033[#{@@colors[color.to_sym]}m#{self}\033[0m"
-  end
-
-  def black;          colorize(:black); end
-  def red;            colorize(:red); end
-  def green;          colorize(:green); end
-  def yellow;         colorize(:yellow); end
-  def blue;           colorize(:blue); end
-  def magenta;        colorize(:magenta); end
-  def cyan;           colorize(:cyan); end
-  def white;          colorize(:white); end
-  def bright_black;   colorize(:bright_black); end
-  def bright_red;     colorize(:bright_red); end
-  def bright_green;   colorize(:bright_green); end
-  def bright_yellow;  colorize(:bright_yellow); end
-  def bright_blue;    colorize(:bright_blue); end
-  def bright_magenta; colorize(:bright_magenta); end
-  def bright_cyan;    colorize(:bright_cyan); end
-  def bright_white;   colorize(:bright_white); end
-end
 
 ##########################################################################################
 
@@ -80,7 +41,13 @@ def task(name, help = "", &block)
     puts
     exit 6
   end
-  @tasks.store(name, { :help => help, :block => block })
+  @tasks.store(
+    name,
+    {
+      :help => Markdown.new(help).to_ansi,
+      :block => block
+    }
+  )
 end
 
 # Call a task.

@@ -44,6 +44,8 @@ end
 
 > Be careful, a block is written with `do...end`.
 
+> Note that help strings support Markdown syntax.
+
 ### Shell commands
 
 "But hey! How can we run arbitrary shell commands? Because this is what I'm here for at first..."

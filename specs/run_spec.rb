@@ -77,22 +77,49 @@ RSpec.describe "run" do
     end
   end
 
-  describe "Help screen" do
+  describe "Help" do
     it "shows help screen by default" do
-      Dir.chdir("#{__dir__}/fixtures/help_screen") do
+      Dir.chdir("#{__dir__}/fixtures/help") do
         stdout, _, _ = Open3.capture3(RUN_PATH)
         expect(stdout).to include "Run"
         expect(stdout).to include "test1"
+        expect(stdout).to include "help1"
         expect(stdout).to include "test2"
+        expect(stdout).to include "help2"
       end
     end
 
     it "shows help screen when required" do
-      Dir.chdir("#{__dir__}/fixtures/help_screen") do
+      Dir.chdir("#{__dir__}/fixtures/help") do
         stdout, _, _ = Open3.capture3(RUN_PATH)
         expect(stdout).to include "Run"
         expect(stdout).to include "test1"
+        expect(stdout).to include "help1"
         expect(stdout).to include "test2"
+        expect(stdout).to include "help2"
+      end
+    end
+
+    it "converts Markdown (bold)" do
+      Dir.chdir("#{__dir__}/fixtures/help") do
+        stdout, _, _ = Open3.capture3(RUN_PATH)
+        expect(stdout).to include "foo\033[1mhelp3\033[0mbar"
+        expect(stdout).to include "foo\033[1mhelp4\033[0mbar"
+      end
+    end
+
+    it "converts Markdown (code)" do
+      Dir.chdir("#{__dir__}/fixtures/help") do
+        stdout, _, _ = Open3.capture3(RUN_PATH)
+        expect(stdout).to include "foo\033[7m\033[34mhelp5\033[0m\033[0mbar"
+      end
+    end
+
+    it "converts Markdown (italic)" do
+      Dir.chdir("#{__dir__}/fixtures/help") do
+        stdout, _, _ = Open3.capture3(RUN_PATH)
+        expect(stdout).to include "foo\033[3mhelp6\033[0mbar"
+        expect(stdout).to include "foo\033[3mhelp7\033[0mbar"
       end
     end
   end
