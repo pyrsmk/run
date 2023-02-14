@@ -14,7 +14,7 @@ RSpec.describe "run" do
 
     it "fails if the Runfile does not exist" do
       Dir.chdir(__dir__) do
-        _, _, status = Open3.capture3("/")
+        _, _, status = Open3.capture3("../bin/run")
         expect(status.exitstatus).to eq 7
       end
     end
