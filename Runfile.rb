@@ -1,6 +1,6 @@
 require "rubygems"
 
-GEMSPEC_FILE_PATH = "#{__dir__}/../run_tasks.gemspec"
+GEMSPEC_FILE_PATH = "#{__dir__}/run_tasks.gemspec"
 
 task :publish do
   gemspec = Gem::Specification::load(GEMSPEC_FILE_PATH)
