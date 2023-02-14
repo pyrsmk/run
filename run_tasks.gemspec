@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = "run_tasks"
-  s.version     = "1.2.2"
+  s.version     = "1.2.3"
   s.files       = ["src/run.rb"]
   s.summary     = "Run project tasks with ease"
   s.authors     = ["Aurélien Delogu"]

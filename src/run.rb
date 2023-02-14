@@ -15,8 +15,8 @@ GEM = if File.exist?(GEMSPEC_PATH)
       else
         Gem::Specification::find_by_name("run_tasks") rescue nil # Production.
       end
-VERSION = GEM ? GEM.version : nil
-HOMEPAGE = GEM ? GEM.homepage : nil
+VERSION = GEM&.version
+HOMEPAGE = GEM&.homepage
 
 ##########################################################################################
 
@@ -69,11 +69,15 @@ end
 # Define a task.
 def task(name, help = "", &block)
   if !name.is_a?(Symbol)
-    puts "first task parameter must be a symbol"
+    puts
+    puts "First task parameter must be a symbol".red
+    puts
     exit 6
   end
   if !help.is_a?(String)
-    puts "second task parameter must be a string"
+    puts
+    puts "Second task parameter must be a string".red
+    puts
     exit 6
   end
   @tasks.store(name, { :help => help, :block => block })
@@ -109,8 +113,10 @@ def require_remote(uri)
   end
   eval File.read(cache_path)
 rescue => error
+  puts
   puts "Unable to load #{uri}:".red
   puts "#{error.class}: #{error.message}".red
+  puts
   exit 8
 end
 
@@ -124,14 +130,18 @@ end
 RUNFILE = "Runfile.rb"
 
 if !File.exists?(RUNFILE)
-  puts "#{RUNFILE} does not exist"
+  puts
+  puts "#{RUNFILE} does not exist".red
+  puts
   exit 7
 end
 
 begin
   require "./#{RUNFILE}"
 rescue SyntaxError
+  puts
   puts "The Runfile contains a syntax error.".red
+  puts
   exit 5
 end
 
@@ -186,7 +196,9 @@ end
 # Run the requested task.
 name = ARGV[0].to_sym
 if !@tasks.include?(name)
-  puts "Unknown '#{name}' task"
+  puts
+  puts "Unknown '#{name}' task".red
+  puts
   exit 2
 end
 begin
