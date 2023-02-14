@@ -7,9 +7,16 @@ require "readline"
 require "rubygems"
 require "securerandom"
 
-GEM = Gem::Specification::load("#{__dir__}/../run_tasks.gemspec")
-VERSION = GEM.version
-HOMEPAGE = GEM.homepage
+##########################################################################################
+
+GEMSPEC_PATH = "#{__dir__}/../run_tasks.gemspec"
+GEM = if File.exist?(GEMSPEC_PATH)
+        Gem::Specification::load(GEMSPEC_PATH) # Development.
+      else
+        Gem::Specification::find_by_name("run_tasks") rescue nil # Production.
+      end
+VERSION = GEM ? GEM.version : nil
+HOMEPAGE = GEM ? GEM.homepage : nil
 
 ##########################################################################################
 
@@ -133,7 +140,11 @@ end
 # Show the help screen if there is no provided task, or if it's explicitly requested.
 if ARGV.size == 0 || (ARGV.size == 1 && ARGV[0] == "help")
   puts
-  puts " Run v#{VERSION}".bright_blue
+  if VERSION
+    puts " Run v#{VERSION}".bright_blue
+  else
+    puts " Run".bright_blue
+  end
   puts
   # Compute the max task names size.
   max_size = @tasks.keys.reduce(0) do |max, name|
@@ -148,26 +159,28 @@ if ARGV.size == 0 || (ARGV.size == 1 && ARGV[0] == "help")
 end
 
 # Verify the latest release version.
-Thread.new do
-  contents = URI.parse("#{HOMEPAGE}/master/run.gemspec")
-                .open
-                .read
-  version = /^\s*s.version\s*=\s*"(.+?)"\s*$/.match(contents)
-  if !version.nil?
-    next if File.exists?("/tmp/run_dismiss_#{version}")
-    current = VERSION.split "."
-    latest = version[1].split "."
-    if current[0].to_i < latest[0].to_i ||
-       current[1].to_i < latest[1].to_i ||
-       current[2].to_i < latest[2].to_i
-       puts "New ".cyan + version[1].yellow + " version released!".cyan
-       puts
-       puts "You can upgrade with:".cyan + "gem update run_tasks".yellow
-       puts
-       File.write "/tmp/run_dismiss_#{version}", ""
+if VERSION && HOMEPAGE
+  Thread.new do
+    contents = URI.parse("#{HOMEPAGE}/master/run.gemspec")
+                  .open
+                  .read
+    version = /^\s*s.version\s*=\s*"(.+?)"\s*$/.match(contents)
+    if !version.nil?
+      next if File.exists?("/tmp/run_dismiss_#{version}")
+      current = VERSION.split "."
+      latest = version[1].split "."
+      if current[0].to_i < latest[0].to_i ||
+        current[1].to_i < latest[1].to_i ||
+        current[2].to_i < latest[2].to_i
+        puts "New ".cyan + version[1].yellow + " version released!".cyan
+        puts
+        puts "You can upgrade with:".cyan + "gem update run_tasks".yellow
+        puts
+        File.write "/tmp/run_dismiss_#{version}", ""
+      end
     end
+  rescue
   end
-rescue
 end
 
 # Run the requested task.
