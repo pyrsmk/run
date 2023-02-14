@@ -104,6 +104,7 @@ def shell(command)
     puts
     raise Interrupt.new
   end
+  puts
 end
 
 def require_remote(uri)
