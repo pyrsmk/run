@@ -28,10 +28,26 @@ RSpec.describe "run" do
   end
 
   describe "Tasks" do
+    it "runs the task" do
+      Dir.chdir("#{__dir__}/fixtures/tasks6") do
+        stdout, _, status = Open3.capture3("#{RUN_PATH} foo_bar")
+        expect(stdout).to include "foobar"
+        expect(status.exitstatus).to eq 0
+      end
+    end
+
+    it "does not fail if task has hyphens instead of underscores" do
+      Dir.chdir("#{__dir__}/fixtures/tasks6") do
+        stdout, _, status = Open3.capture3("#{RUN_PATH} foo-bar")
+        expect(stdout).to include "foobar"
+        expect(status.exitstatus).to eq 0
+      end
+    end
+
     it "fails if first parameter is not a symbol" do
       Dir.chdir("#{__dir__}/fixtures/tasks1") do
         stdout, _, status = Open3.capture3(RUN_PATH)
-        expect(stdout.chomp).to eq "first task parameter must be a symbol"
+        expect(stdout.chomp).to include "First task parameter must be a symbol"
         expect(status.exitstatus).to eq 6
       end
     end
@@ -39,7 +55,7 @@ RSpec.describe "run" do
     it "fails if second parameter is not a string" do
       Dir.chdir("#{__dir__}/fixtures/tasks2") do
         stdout, _, status = Open3.capture3(RUN_PATH)
-        expect(stdout.chomp).to eq "second task parameter must be a string"
+        expect(stdout.chomp).to include "Second task parameter must be a string"
         expect(status.exitstatus).to eq 6
       end
     end

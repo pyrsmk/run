@@ -195,7 +195,7 @@ if VERSION && HOMEPAGE
 end
 
 # Run the requested task.
-name = ARGV[0].to_sym
+name = ARGV[0].gsub('-', '_').to_sym # Auto-fix hyphens to underscores.
 if !@tasks.include?(name)
   puts
   puts "Unknown '#{name}' task".red
