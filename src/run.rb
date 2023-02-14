@@ -7,7 +7,7 @@ require "readline"
 require "rubygems"
 require "securerandom"
 
-GEM = Gem::Specification::load("#{__dir__}/../run.gemspec")
+GEM = Gem::Specification::load("#{__dir__}/../run_tasks.gemspec")
 VERSION = GEM.version
 HOMEPAGE = GEM.homepage
 
