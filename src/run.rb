@@ -9,8 +9,8 @@ require "securerandom"
 
 ##########################################################################################
 
-require_relative "./run/markdown"
-require_relative "./run/string"
+require_relative "#{__dir__}/run/markdown"
+require_relative "#{__dir__}/run/string"
 
 ##########################################################################################
 
