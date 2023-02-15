@@ -16,19 +16,19 @@ class Markdown
   private
 
   def bold(string)
-    string.gsub(/([^*_])[*_]{2}([^*_]+)[*_]{2}([^*_])/) do
+    string.gsub(/([^*_]|^)[*_]{2}([^*_]+)[*_]{2}([^*_]|$)/) do
       Regexp.last_match[1] + Regexp.last_match[2].bold + Regexp.last_match[3]
     end
   end
 
   def code(string)
-    string.gsub(/([^`])`([^*_]+)`([^`])/) do
-      Regexp.last_match[1] + Regexp.last_match[2].blue.inverse + Regexp.last_match[3]
+    string.gsub(/([^`]|^)`([^*_]+)`([^`]|$)/) do
+      Regexp.last_match[1] + Regexp.last_match[2].cyan + Regexp.last_match[3]
     end
   end
 
   def italic(string)
-    string.gsub(/([^*_])[*_]{1}([^*_]+)[*_]{1}([^*_])/) do
+    string.gsub(/([^*_]|^)[*_]{1}([^*_]+)[*_]{1}([^*_]|$)/) do
       Regexp.last_match[1] + Regexp.last_match[2].italic + Regexp.last_match[3]
     end
   end

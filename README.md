@@ -190,13 +190,24 @@ A special command is available to require [Run extensions](https://github.com/py
 require_extension "docker_v1.0.0"
 ```
 
-### Colorization
+### Colorization & styles
 
-It is often needed to colorize the messages sent to the user with `puts`. For this matter, Run is natively shipped with basic colorization so you don't need to add dependencies from RubyGems/Bundler.
+It is often needed to colorize/stylize the messages sent to the user with `puts`. For this matter, Run is natively shipped with basic styles.
+
+For example:
 
 ```rb
-puts "Please wait...".yellow
+puts "Please wait...".yellow.bold
 ```
+
+The available styles are :
+
+- bold
+- dim
+- italic
+- underline
+- inverse
+- strikethrough
 
 The available colors are :
 

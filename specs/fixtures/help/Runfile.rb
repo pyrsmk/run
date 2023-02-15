@@ -4,17 +4,18 @@ end
 task :test2, "help2" do
 end
 
-task :test3, "foo**help3**bar" do
-end
-
-task :test4, "foo__help4__bar" do
-end
-
-task :test5, "foo`help5`bar" do
-end
-
-task :test6, "foo*help6*bar" do
-end
-
-task :test7, "foo_help7_bar" do
+# Each token should be able to be rendered twice, in the middle of a word or at string
+# start/end.
+index = 2
+[
+  "**",
+  "__",
+  "`",
+  "*",
+  "_"
+].each do |token|
+  task "test#{index += 1}".to_sym, "#{token}help#{index}#{token}" do; end
+  task "test#{index += 1}".to_sym, "#{token}help#{index}#{token}" do; end
+  task "test#{index += 1}".to_sym, "foo#{token}help#{index}#{token}bar" do; end
+  task "test#{index += 1}".to_sym, "foo#{token}help#{index}#{token}bar" do; end
 end

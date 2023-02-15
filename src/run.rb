@@ -106,9 +106,10 @@ end
 
 begin
   require "./#{RUNFILE}"
-rescue SyntaxError
+rescue SyntaxError => error
   puts
-  puts "The Runfile contains a syntax error.".red
+  puts "The Runfile contains a syntax error:".red
+  puts error.message.red
   puts
   exit 5
 end
@@ -148,8 +149,8 @@ if VERSION && HOMEPAGE
       current = VERSION.split "."
       latest = version[1].split "."
       if current[0].to_i < latest[0].to_i ||
-        current[1].to_i < latest[1].to_i ||
-        current[2].to_i < latest[2].to_i
+         current[1].to_i < latest[1].to_i ||
+         current[2].to_i < latest[2].to_i
         puts "New ".cyan + version[1].yellow + " version released!".cyan
         puts
         puts "You can upgrade with:".cyan + "gem update run_tasks".yellow

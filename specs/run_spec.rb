@@ -100,26 +100,33 @@ RSpec.describe "run" do
       end
     end
 
-    it "converts Markdown (bold)" do
-      Dir.chdir("#{__dir__}/fixtures/help") do
-        stdout, _, _ = Open3.capture3(RUN_PATH)
-        expect(stdout).to include "foo\033[1mhelp3\033[0mbar"
-        expect(stdout).to include "foo\033[1mhelp4\033[0mbar"
-      end
-    end
-
-    it "converts Markdown (code)" do
-      Dir.chdir("#{__dir__}/fixtures/help") do
-        stdout, _, _ = Open3.capture3(RUN_PATH)
-        expect(stdout).to include "foo\033[7m\033[34mhelp5\033[0m\033[0mbar"
-      end
-    end
-
-    it "converts Markdown (italic)" do
-      Dir.chdir("#{__dir__}/fixtures/help") do
-        stdout, _, _ = Open3.capture3(RUN_PATH)
-        expect(stdout).to include "foo\033[3mhelp6\033[0mbar"
-        expect(stdout).to include "foo\033[3mhelp7\033[0mbar"
+    [
+      { token: "**", expectation: "\033[1mhelp3\033[0m" },
+      { token: "**", expectation: "\033[1mhelp4\033[0m" },
+      { token: "**", expectation: "foo\033[1mhelp5\033[0mbar" },
+      { token: "**", expectation: "foo\033[1mhelp6\033[0mbar" },
+      { token: "__", expectation: "\033[1mhelp7\033[0m" },
+      { token: "__", expectation: "\033[1mhelp8\033[0m" },
+      { token: "__", expectation: "foo\033[1mhelp9\033[0mbar" },
+      { token: "__", expectation: "foo\033[1mhelp10\033[0mbar" },
+      { token: "`",  expectation: "\033[7m\033[34mhelp11\033[0m\033[0m" },
+      { token: "`",  expectation: "\033[7m\033[34mhelp12\033[0m\033[0m" },
+      { token: "`",  expectation: "foo\033[7m\033[34mhelp13\033[0m\033[0mbar" },
+      { token: "`",  expectation: "foo\033[7m\033[34mhelp14\033[0m\033[0mbar" },
+      { token: "*",  expectation: "\033[3mhelp15\033[0m" },
+      { token: "*",  expectation: "\033[3mhelp16\033[0m" },
+      { token: "*",  expectation: "foo\033[3mhelp17\033[0mbar" },
+      { token: "*",  expectation: "foo\033[3mhelp18\033[0mbar" },
+      { token: "_",  expectation: "\033[3mhelp19\033[0m" },
+      { token: "_",  expectation: "\033[3mhelp20\033[0m" },
+      { token: "_",  expectation: "foo\033[3mhelp21\033[0mbar" },
+      { token: "_",  expectation: "foo\033[3mhelp22\033[0mbar" },
+    ].each do |test|
+      it "converts Markdown (token: #{test[:token]})" do
+        Dir.chdir("#{__dir__}/fixtures/help") do
+          stdout, _, _ = Open3.capture3(RUN_PATH)
+          expect(stdout).to include test[:expectation]
+        end
       end
     end
   end
