@@ -69,12 +69,12 @@ $ run boom
 hello!
 ```
 
-As you can see, Ruby can run arbitrary command by simply using backticks. However, it won't choke if the command fails. To handle more advance use cases, Run exposes a `shell` function:
+As you can see, Ruby can run arbitrary command by simply using backticks. However, it won't choke if the command fails. To handle more advance use cases, Run exposes a `run` function:
 
 ```rb
 task :boom, "Access to an unknown file" do
-  shell "stat foo"
-  shell "echo 'hello!'"
+  run "stat foo"
+  run "echo 'hello!'"
 end
 ```
 
@@ -88,24 +88,24 @@ $ run boom
 stat: cannot stat 'foo': No such file or directory
 ```
 
-As you can see, `shell` also captures errors and stops when something bad happens (this is why `echo 'hello!'` is not called).
+As you can see, `run` also captures errors and stops when something bad happens (this is why `echo 'hello!'` is not called).
 
 ### Calling other tasks
 
-You can run tasks arbitrarily from other tasks with `call`:
+You can run tasks arbitrarily from other tasks with `run` too, but by passing a symbol instead:
 
 ```rb
 task :eslint do
-  shell "npx eslint"
+  run "npx eslint"
 end
 
 task :flow do
-  shell "npx flow"
+  run "npx flow"
 end
 
 task :lint_js do
-  call :eslint
-  call :flow
+  run :eslint
+  run :flow
 end
 ```
 

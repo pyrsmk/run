@@ -1,3 +1,3 @@
 task :foo do
-  shell "pwd"
+  run "pwd"
 end

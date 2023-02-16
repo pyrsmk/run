@@ -1,3 +1,3 @@
 task :foo do
-  shell "ls /non_existent_directory"
+  run "ls /non_existent_directory"
 end

@@ -27,7 +27,9 @@ HOMEPAGE = GEM&.homepage
 
 @tasks = Hash.new
 
-# Define a task.
+# @param name [Symbol]
+# @param help [String]
+# @yield [*Array, **Hash]
 def task(name, help = "", &block)
   if !name.is_a?(Symbol)
     puts
@@ -50,16 +52,18 @@ def task(name, help = "", &block)
   )
 end
 
-# Call a task.
-def call(name, *arguments, **options)
-  @tasks[name][:block].call *arguments, **options
-end
+# @param task_name_or_command [Symbol, String]
+# @param arguments [Array] Optional arguments sent to the task.
+# @param options [Hash] Optional options sent to the task.
+def run(task_name_or_command, *arguments, **options)
+  if task_name_or_command.is_a?(Symbol)
+    @tasks[task_name_or_command][:block].call *arguments, **options
+    return
+  end
 
-# Run a shell command.
-def shell(command)
-  puts ">".bright_blue + " #{command}".bright_white
+  puts ">".bright_blue + " #{task_name_or_command}".bright_white
   puts
-  case system(command)
+  case system(task_name_or_command)
   when false
     puts
     puts "The command has exited with return code: #{$?.exitstatus}.".magenta
@@ -74,6 +78,7 @@ def shell(command)
   puts
 end
 
+# @param uri [String]
 def require_remote(uri)
   cache_path = "/tmp/run_cache_#{Digest::MD5.hexdigest(uri)}"
   if !File.exists? cache_path
@@ -88,6 +93,7 @@ rescue => error
   exit 8
 end
 
+# @param name [String]
 def require_extension(name)
   require_remote "https://pyrsmk.fra1.cdn.digitaloceanspaces.com" \
                  "/run_extensions/#{name}.rb"
@@ -171,7 +177,7 @@ if !@tasks.include?(name)
   exit 2
 end
 begin
-  call name, *ARGV.slice(1..)
+  run(name, *ARGV.slice(1..))
 rescue Interrupt
   exit 3
 rescue => error
