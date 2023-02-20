@@ -34,13 +34,11 @@ def task(name, help = "", &block)
   if !name.is_a?(Symbol)
     puts
     puts "First task parameter must be a symbol".red
-    puts
     exit 6
   end
   if !help.is_a?(String)
     puts
     puts "Second task parameter must be a string".red
-    puts
     exit 6
   end
   @tasks.store(
@@ -89,7 +87,6 @@ rescue => error
   puts
   puts "Unable to load #{uri}:".red
   puts "#{error.class}: #{error.message}".red
-  puts
   exit 8
 end
 
@@ -106,7 +103,6 @@ RUNFILE = "Runfile.rb"
 if !File.exists?(RUNFILE)
   puts
   puts "#{RUNFILE} does not exist".red
-  puts
   exit 7
 end
 
@@ -116,7 +112,6 @@ rescue SyntaxError => error
   puts
   puts "The Runfile contains a syntax error:".red
   puts error.message.red
-  puts
   exit 5
 end
 
@@ -146,25 +141,27 @@ end
 # Verify the latest release version.
 if VERSION && HOMEPAGE
   Thread.new do
-    contents = URI.parse("#{HOMEPAGE}/master/run.gemspec")
-                  .open
-                  .read
-    version = /^\s*s.version\s*=\s*"(.+?)"\s*$/.match(contents)
-    if !version.nil?
-      next if File.exists?("/tmp/run_dismiss_#{version}")
-      current = VERSION.split "."
-      latest = version[1].split "."
-      if current[0].to_i < latest[0].to_i ||
-         current[1].to_i < latest[1].to_i ||
-         current[2].to_i < latest[2].to_i
-        puts "New ".cyan + version[1].yellow + " version released!".cyan
-        puts
-        puts "You can upgrade with:".cyan + "gem update run_tasks".yellow
-        puts
-        File.write "/tmp/run_dismiss_#{version}", ""
+    begin
+      contents = URI.parse("#{HOMEPAGE}/master/run.gemspec")
+                    .open
+                    .read
+      version = /^\s*s.version\s*=\s*"(.+?)"\s*$/.match(contents)
+      if !version.nil?
+        next if File.exists?("/tmp/run_dismiss_#{version}")
+        current = VERSION.split "."
+        latest = version[1].split "."
+        if current[0].to_i < latest[0].to_i ||
+          current[1].to_i < latest[1].to_i ||
+          current[2].to_i < latest[2].to_i
+          puts "New ".cyan + version[1].yellow + " version released!".cyan
+          puts
+          puts "You can upgrade with:".cyan + "gem update run_tasks".yellow
+          puts
+          File.write "/tmp/run_dismiss_#{version}", ""
+        end
       end
+    rescue
     end
-  rescue
   end
 end
 
@@ -173,14 +170,15 @@ name = ARGV[0].gsub('-', '_').to_sym # Auto-fix hyphens to underscores.
 if !@tasks.include?(name)
   puts
   puts "Unknown '#{name}' task".red
-  puts
   exit 2
 end
 begin
-  run(name, *ARGV.slice(1..))
+  run(name, *ARGV.slice(Range.new(1, ARGV.size - 1)))
 rescue Interrupt
   exit 3
 rescue => error
-  puts error.message.red
+  puts
+  puts "· #{error.message}".red
+  puts "· #{error.backtrace.first}".red
   exit 4
 end

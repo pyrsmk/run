@@ -10,6 +10,10 @@ Indeed, several solutions already exist to write project tasks: Make, Rake, Grun
 
 What does need a task runner? Concision for readability, powerfulness for writing any task you need. This is for these considerations that Ruby was chosen as the file format for Run.
 
+## Compatibility
+
+Run is at least compatible with Ruby 2.3.3.
+
 ## Install
 
 Install Ruby 2.7 with the package manager of your environment, or download it from [the official page](https://www.ruby-lang.org/en/downloads/).
