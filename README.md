@@ -247,6 +247,23 @@ ensure
 end
 ```
 
+### Waiting for CTRL+C
+
+If you need to wait for the user to interrupt the task, you can do it with:
+
+```rb
+task :dev, "Run server in development mode" do
+  Thread.new do
+    # Run first server.
+  end
+  Thread.new do
+    # Run second server.
+  end
+  # Wait for CTRL+C.
+  STDIN.gets while true
+end
+```
+
 ## Exit codes
 
 Run can exit with several different codes:

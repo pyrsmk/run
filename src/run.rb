@@ -9,8 +9,8 @@ require "securerandom"
 
 ##########################################################################################
 
-require_relative "#{__dir__}/run/markdown"
 require_relative "#{__dir__}/run/string"
+require_relative "#{__dir__}/run/markdown/engine"
 
 ##########################################################################################
 
@@ -44,7 +44,7 @@ def task(name, help = "", &block)
   @tasks.store(
     name,
     {
-      :help => Markdown.new(help).to_ansi,
+      :help => Markdown::Engine.new(help).to_ansi,
       :block => block
     }
   )

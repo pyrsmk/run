@@ -15,7 +15,6 @@ index = 2
   "_"
 ].each do |token|
   task "test#{index += 1}".to_sym, "#{token}help#{index}#{token}" do; end
-  task "test#{index += 1}".to_sym, "#{token}help#{index}#{token}" do; end
   task "test#{index += 1}".to_sym, "foo#{token}help#{index}#{token}bar" do; end
-  task "test#{index += 1}".to_sym, "foo#{token}help#{index}#{token}bar" do; end
+  task "test#{index += 1}".to_sym, "#{token}help#{index}#{token}foobar#{token}help#{index}#{token}" do; end
 end
