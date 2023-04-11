@@ -214,6 +214,25 @@ RSpec.describe "run" do
     end
   end
 
+  describe "are_you_sure?" do
+    let(:yes) { ["Y", "y", "YES", "yes"].sample }
+    let(:no) { ["N", "n", "NO", "no", SecureRandom.hex].sample }
+
+    it "does not fail if the answer is `yes`" do
+      Dir.chdir("#{__dir__}/fixtures/helpers1") do
+        stdout, _, status = Open3.capture3("#{RUN_PATH} foo", stdin_data: "#{yes}\n")
+        expect(status.exitstatus).to eq 0
+      end
+    end
+
+    it "exits if the answer is `no`" do
+      Dir.chdir("#{__dir__}/fixtures/helpers1") do
+        stdout, _, status = Open3.capture3("#{RUN_PATH} foo", stdin_data: "#{no}\n")
+        expect(status.exitstatus).to eq 9
+      end
+    end
+  end
+
   # TODO Currently we cannot test this feature because we cannot mock anything since it's
   # run into a subprocess. To be able to test this we need to refactor Run and put those
   # methods in a class.

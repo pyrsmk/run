@@ -80,6 +80,12 @@ def run(task_name_or_command, *arguments, **options)
   puts
 end
 
+def are_you_sure?(text = "Are you sure?")
+  puts "#{text.yellow.bold} [yN]"
+  answer = STDIN.gets.chomp.downcase.chars.first
+  exit 9 unless answer == "y"
+end
+
 # @param uri [String]
 def require_remote(uri)
   cache_path = "/tmp/run_cache_#{Digest::MD5.hexdigest(uri)}"

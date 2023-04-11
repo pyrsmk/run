@@ -130,6 +130,18 @@ $ run hello "John Doe" 30
 Hello John Doe, you are 30.
 ```
 
+Of course, it also works with task calls from the Runfile:
+
+```rb
+task :test do
+  run :hello, "John Doe", 30
+end
+# or
+task :test do
+  run :hello, name: "John Doe", age: 30
+end
+```
+
 ### Functions and interpolation
 
 To simplify your tasks and reuse some bits of code, you can use functions. Functions in Ruby are created with `def function_name...end`.
@@ -232,6 +244,26 @@ The available colors are :
 - bright_cyan
 - bright_white
 
+### Helpers
+
+#### are_you_sure?
+
+When called, it asks a question to the user which has the choice to enter `y`, `yes`, `n` or `no` (the default answer). When `no` is selected, the task will exit with a `9` code.
+
+```rb
+task :dangerous_task do
+  are_you_sure? "This task will delete your hard drive. Are you sure about that?"
+  #
+  # Some dangerous actions.
+  #
+end
+```
+
+```sh
+$ run dangerous_task
+This task will delete your hard drive. Are you sure about that? [yN]
+```
+
 ## Recipes
 
 ### Interrupting a task
@@ -276,6 +308,7 @@ Run can exit with several different codes:
 - 6: Task parameters are invalid.
 - 7: Runfile not found.
 - 8: Unable to load a remote file.
+- 9: The user has answered "No" to an "Are you sure?" question.
 
 ## Development
 
