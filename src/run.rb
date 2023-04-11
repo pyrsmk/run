@@ -55,7 +55,11 @@ end
 # @param options [Hash] Optional options sent to the task.
 def run(task_name_or_command, *arguments, **options)
   if task_name_or_command.is_a?(Symbol)
-    @tasks[task_name_or_command][:block].call *arguments, **options
+    if options.empty?
+      @tasks[task_name_or_command][:block].call *arguments
+    else
+      @tasks[task_name_or_command][:block].call *arguments, **options
+    end
     return
   end
 

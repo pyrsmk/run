@@ -9,6 +9,6 @@ task :publish do
   `rm #{gemspec.name}-#{gemspec.version}.gem`
 end
 
-task :specs do
-  run "bundle exec rspec specs"
+task :specs do |path = "specs"|
+  run "bundle exec rspec #{path}"
 end
