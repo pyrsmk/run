@@ -156,6 +156,14 @@ RSpec.describe "run" do
         expect(stdout).to include "bar"
       end
     end
+
+    it "passes options from Runfile" do
+      Dir.chdir("#{__dir__}/fixtures/tasks3") do
+        stdout, _, _ = Open3.capture3("#{RUN_PATH} task4")
+        expect(stdout).to include "option1=1"
+        expect(stdout).to include "option2=2"
+      end
+    end
   end
 
   describe "Run backticks commands" do

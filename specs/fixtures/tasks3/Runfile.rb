@@ -15,9 +15,10 @@ task :subtask3_1 do
 end
 
 task :task4 do |*args|
-  run :subtask4_1, *args
+  run :subtask4_1, *args, option1: 1, option2: 2
 end
 
-task :subtask4_1 do |*args|
+task :subtask4_1 do |*args, **options|
   args.each { |value| puts value }
+  options.each { |key, value| puts "#{key}=#{value}" }
 end
