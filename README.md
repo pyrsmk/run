@@ -6,7 +6,7 @@ You don't even have to learn Ruby to being able to use Run. Just follow the docu
 
 ## Why?
 
-Indeed, several solutions already exist to write project tasks: Make, Rake, Grunt, Gulp, Just (from Microsoft), Just (the Go project), and a plenty others. But they always come with flaws and, generally, are limited in terms of flexibility: either because of a textual file format or because of the programming language (looking at you JavaScript).
+Indeed, several solutions already exist to write project tasks: Make, Rake, Grunt, Gulp, Just (from Microsoft), Just (written in Rust), and a plenty others. But they always come with flaws and, generally, are limited in terms of flexibility: either because of a textual file format or because of the programming language (looking at you JavaScript).
 
 What does need a task runner? Concision for readability, powerfulness for writing any task you need. This is for these considerations that Ruby was chosen as the file format for Run.
 
@@ -16,7 +16,7 @@ Run is at least compatible with Ruby 2.3.3.
 
 ## Install
 
-Install Ruby 2.7 with the package manager of your environment, or download it from [the official page](https://www.ruby-lang.org/en/downloads/).
+Install Ruby with the package manager of your environment, or download it from [the official page](https://www.ruby-lang.org/en/downloads/), then install Run globally with:
 
 ```sh
 gem install run_tasks
