@@ -6,12 +6,17 @@ end
 task :test2 do
 end
 
+# first line
+# second line
 task :test3 do
+end
+
+task :test4 do
 end
 
 # Each token should be able to be rendered twice, in the middle of a word or at string
 # start/end.
-index = 3
+index = 4
 [
   "**",
   "__",

@@ -47,7 +47,7 @@ RSpec.describe "run" do
     it "fails if first parameter is not a symbol" do
       Dir.chdir("#{__dir__}/fixtures/tasks1") do
         stdout, _, status = Open3.capture3(RUN_PATH)
-        expect(stdout.chomp).to include "First task parameter must be a symbol"
+        expect(stdout.chomp).to include "'name' parameter must be a symbol"
         expect(status.exitstatus).to eq 6
       end
     end
@@ -55,7 +55,7 @@ RSpec.describe "run" do
     it "fails if second parameter is not a string" do
       Dir.chdir("#{__dir__}/fixtures/tasks2") do
         stdout, _, status = Open3.capture3(RUN_PATH)
-        expect(stdout.chomp).to include "Second task parameter must be a string"
+        expect(stdout.chomp).to include "'help' parameter must be a string"
         expect(status.exitstatus).to eq 6
       end
     end
@@ -97,25 +97,29 @@ RSpec.describe "run" do
         expect(stdout).to include "help1"
         expect(stdout).to include "test2"
         expect(stdout).to include "\033[3mhelp2\033[0m"
+        expect(stdout).to include "test3"
+        expect(stdout).to include "first line"
+        expect(stdout).to include "second line"
+        expect(stdout).to include "test4"
       end
     end
 
     [
-      { token: "**", expectation: "\033[1mhelp4\033[0m" },
-      { token: "**", expectation: "foo\033[1mhelp5\033[0mbar" },
-      { token: "**", expectation: "\033[1mhelp6\033[0mfoobar\033[1mhelp6\033[0m" },
-      { token: "__", expectation: "\033[1mhelp7\033[0m" },
-      { token: "__", expectation: "foo\033[1mhelp8\033[0mbar" },
-      { token: "__", expectation: "\033[1mhelp9\033[0mfoobar\033[1mhelp9\033[0m" },
-      { token: "`",  expectation: "\033[36mhelp10\033[0m" },
-      { token: "`",  expectation: "foo\033[36mhelp11\033[0mbar" },
-      { token: "`",  expectation: "\033[36mhelp12\033[0mfoobar\033[36mhelp12\033[0m" },
-      { token: "*",  expectation: "\033[3mhelp13\033[0m" },
-      { token: "*",  expectation: "foo\033[3mhelp14\033[0mbar" },
-      { token: "*",  expectation: "\033[3mhelp15\033[0mfoobar\033[3mhelp15\033[0m" },
-      { token: "_",  expectation: "\033[3mhelp16\033[0m" },
-      { token: "_",  expectation: "foo\033[3mhelp17\033[0mbar" },
-      { token: "_",  expectation: "\033[3mhelp18\033[0mfoobar\033[3mhelp18\033[0m" },
+      { token: "**", expectation: "\033[1mhelp5\033[0m" },
+      { token: "**", expectation: "foo\033[1mhelp6\033[0mbar" },
+      { token: "**", expectation: "\033[1mhelp7\033[0mfoobar\033[1mhelp7\033[0m" },
+      { token: "__", expectation: "\033[1mhelp8\033[0m" },
+      { token: "__", expectation: "foo\033[1mhelp9\033[0mbar" },
+      { token: "__", expectation: "\033[1mhelp10\033[0mfoobar\033[1mhelp10\033[0m" },
+      { token: "`",  expectation: "\033[36mhelp11\033[0m" },
+      { token: "`",  expectation: "foo\033[36mhelp12\033[0mbar" },
+      { token: "`",  expectation: "\033[36mhelp13\033[0mfoobar\033[36mhelp13\033[0m" },
+      { token: "*",  expectation: "\033[3mhelp14\033[0m" },
+      { token: "*",  expectation: "foo\033[3mhelp15\033[0mbar" },
+      { token: "*",  expectation: "\033[3mhelp16\033[0mfoobar\033[3mhelp16\033[0m" },
+      { token: "_",  expectation: "\033[3mhelp17\033[0m" },
+      { token: "_",  expectation: "foo\033[3mhelp18\033[0mbar" },
+      { token: "_",  expectation: "\033[3mhelp19\033[0mfoobar\033[3mhelp19\033[0m" },
     ].each do |test|
       it "converts Markdown (token: #{test[:token]})" do
         Dir.chdir("#{__dir__}/fixtures/help") do

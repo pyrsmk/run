@@ -33,24 +33,30 @@ HOMEPAGE = GEM&.homepage
 def task(name, help = nil, &block)
   if !name.is_a?(Symbol)
     puts
-    puts "First task parameter must be a symbol".red
+    puts "'name' parameter must be a symbol".red
     exit 6
   end
-  if !help.nil? && !help.is_a?(String)
-    puts
-    puts "Second task parameter must be a string".red
-    exit 6
-  end
-  if help.nil?
+  if !help.nil?
+    if !help.is_a?(String)
+      puts
+      puts "'help' parameter must be a string".red
+      exit 6
+    end
+  else
+    # Load comments directly above the task as help verbatim.
     caller = caller_locations[0]
-    line = File.readlines(caller.absolute_path)[caller.lineno - 2]
-    match = /^\s*#\s*(?<comment>.+?)\s*$/.match(line)
-    help = match[:comment] if !match.nil?
+    lines = File.readlines(caller.absolute_path)
+    help = (0..(caller.lineno - 2)).to_a.reverse.reduce([]) do |comments, lineno|
+      match = /^\s*#\s*(?<comment>.+?)\s*$/.match(lines[lineno])
+      break comments if match.nil?
+      comments << match[:comment]
+      comments
+    end.reverse
   end
   @tasks.store(
     name,
     {
-      :help => help.nil? ? "" : Markdown::Engine.new(help).to_ansi,
+      :help => help.is_a?(String) ? [help] : help,
       :block => block
     }
   )
@@ -149,7 +155,18 @@ if ARGV.size == 0 || (ARGV.size == 1 && ARGV[0] == "help")
   end
   # Display each task and their help.
   @tasks.sort.to_h.each do |name, task|
-    puts " #{name}".yellow + (" " * (max_size - name.size + 4)) + task[:help]
+    if task[:help].size == 0
+      puts " #{name}".yellow
+      next
+    end
+    task[:help].each_with_index do |help, index|
+      help = Markdown::Engine.new(help).to_ansi
+      if index == 0
+        puts " #{name}".yellow + (" " * (max_size - name.size + 4)) + help
+        next
+      end
+      puts (" " * (max_size + 5)) + help
+    end
   end
   exit
 end
