@@ -6,13 +6,13 @@ You don't even have to learn Ruby to being able to use Run. Just follow the docu
 
 ## Why?
 
-Indeed, several solutions already exist to write project tasks: Make, Rake, Grunt, Gulp, Just (from Microsoft), Just (written in Rust), and a plenty others. But they always come with flaws and, generally, are limited in terms of flexibility: either because of a textual file format or because of the programming language (looking at you JavaScript).
+Indeed, several solutions already exist to write project tasks: Make, Rake, Grunt, Gulp, Just (from Microsoft), Just (written in Rust), and a plenty others. But they always come with flaws IMHO and, generally, are limited in terms of flexibility: either because of a textual file format or because of the programming language (yeah, I'm looking at you JavaScript).
 
 What does need a task runner? Concision for readability, powerfulness for writing any task you need. This is for these considerations that Ruby was chosen as the file format for Run.
 
 ## Compatibility
 
-Run is at least compatible with Ruby 2.3.3.
+Run is at least compatible with Ruby 2.3.3, but probably with several anterior versions too.
 
 ## Install
 
@@ -34,6 +34,8 @@ If you want to display the available tasks:
 run help
 ```
 
+> Note that `run` is displaying the help screen by default when no task is specified.
+
 ## Writing tasks
 
 Now, you need to write your `Runfile.rb` in your project. Here's a simple example:
@@ -49,6 +51,15 @@ end
 > Be careful, a block is written with `do...end`.
 
 > Note that help strings support Markdown syntax.
+
+Help strings can also be written as comments (really useful when they are really long, to keep clarity) :
+
+```rb
+# Displays hello
+task :hello do
+  puts "hello!"
+end
+```
 
 ### Shell commands
 
@@ -309,13 +320,3 @@ Run can exit with several different codes:
 - 7: Runfile not found.
 - 8: Unable to load a remote file.
 - 9: The user has answered "No" to an "Are you sure?" question.
-
-## Development
-
-### Prerequisites
-
-You'll need to install Bundler with `gem install bundler` because the Runfile need some gems to be installed with `bundle install`.
-
-### Publish
-
-To being able to publish to the CDN you'll need to create a `.env` file and define the `SPACES_SECRET` variable.

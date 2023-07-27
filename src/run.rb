@@ -25,26 +25,32 @@ HOMEPAGE = GEM&.homepage
 
 ##########################################################################################
 
-@tasks = Hash.new
+@tasks = {}
 
 # @param name [Symbol]
 # @param help [String]
 # @yield [*Array, **Hash]
-def task(name, help = "", &block)
+def task(name, help = nil, &block)
   if !name.is_a?(Symbol)
     puts
     puts "First task parameter must be a symbol".red
     exit 6
   end
-  if !help.is_a?(String)
+  if !help.nil? && !help.is_a?(String)
     puts
     puts "Second task parameter must be a string".red
     exit 6
   end
+  if help.nil?
+    caller = caller_locations[0]
+    line = File.readlines(caller.absolute_path)[caller.lineno - 2]
+    match = /^\s*#\s*(?<comment>.+?)\s*$/.match(line)
+    help = match[:comment] if !match.nil?
+  end
   @tasks.store(
     name,
     {
-      :help => Markdown::Engine.new(help).to_ansi,
+      :help => help.nil? ? "" : Markdown::Engine.new(help).to_ansi,
       :block => block
     }
   )

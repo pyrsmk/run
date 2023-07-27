@@ -96,26 +96,26 @@ RSpec.describe "run" do
         expect(stdout).to include "test1"
         expect(stdout).to include "help1"
         expect(stdout).to include "test2"
-        expect(stdout).to include "help2"
+        expect(stdout).to include "\033[3mhelp2\033[0m"
       end
     end
 
     [
-      { token: "**", expectation: "\033[1mhelp3\033[0m" },
-      { token: "**", expectation: "foo\033[1mhelp4\033[0mbar" },
-      { token: "**", expectation: "\033[1mhelp5\033[0mfoobar\033[1mhelp5\033[0m" },
-      { token: "__", expectation: "\033[1mhelp6\033[0m" },
-      { token: "__", expectation: "foo\033[1mhelp7\033[0mbar" },
-      { token: "__", expectation: "\033[1mhelp8\033[0mfoobar\033[1mhelp8\033[0m" },
-      { token: "`",  expectation: "\033[36mhelp9\033[0m" },
-      { token: "`",  expectation: "foo\033[36mhelp10\033[0mbar" },
-      { token: "`",  expectation: "\033[36mhelp11\033[0mfoobar\033[36mhelp11\033[0m" },
-      { token: "*",  expectation: "\033[3mhelp12\033[0m" },
-      { token: "*",  expectation: "foo\033[3mhelp13\033[0mbar" },
-      { token: "*",  expectation: "\033[3mhelp14\033[0mfoobar\033[3mhelp14\033[0m" },
-      { token: "_",  expectation: "\033[3mhelp15\033[0m" },
-      { token: "_",  expectation: "foo\033[3mhelp16\033[0mbar" },
-      { token: "_",  expectation: "\033[3mhelp17\033[0mfoobar\033[3mhelp17\033[0m" },
+      { token: "**", expectation: "\033[1mhelp4\033[0m" },
+      { token: "**", expectation: "foo\033[1mhelp5\033[0mbar" },
+      { token: "**", expectation: "\033[1mhelp6\033[0mfoobar\033[1mhelp6\033[0m" },
+      { token: "__", expectation: "\033[1mhelp7\033[0m" },
+      { token: "__", expectation: "foo\033[1mhelp8\033[0mbar" },
+      { token: "__", expectation: "\033[1mhelp9\033[0mfoobar\033[1mhelp9\033[0m" },
+      { token: "`",  expectation: "\033[36mhelp10\033[0m" },
+      { token: "`",  expectation: "foo\033[36mhelp11\033[0mbar" },
+      { token: "`",  expectation: "\033[36mhelp12\033[0mfoobar\033[36mhelp12\033[0m" },
+      { token: "*",  expectation: "\033[3mhelp13\033[0m" },
+      { token: "*",  expectation: "foo\033[3mhelp14\033[0mbar" },
+      { token: "*",  expectation: "\033[3mhelp15\033[0mfoobar\033[3mhelp15\033[0m" },
+      { token: "_",  expectation: "\033[3mhelp16\033[0m" },
+      { token: "_",  expectation: "foo\033[3mhelp17\033[0mbar" },
+      { token: "_",  expectation: "\033[3mhelp18\033[0mfoobar\033[3mhelp18\033[0m" },
     ].each do |test|
       it "converts Markdown (token: #{test[:token]})" do
         Dir.chdir("#{__dir__}/fixtures/help") do

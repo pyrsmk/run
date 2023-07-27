@@ -1,12 +1,17 @@
-task :test1, "help1" do
+# help1
+task :test1 do
 end
 
-task :test2, "help2" do
+# *help2*
+task :test2 do
+end
+
+task :test3 do
 end
 
 # Each token should be able to be rendered twice, in the middle of a word or at string
 # start/end.
-index = 2
+index = 3
 [
   "**",
   "__",
