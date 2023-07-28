@@ -98,6 +98,34 @@ def are_you_sure?(text = "Are you sure?")
   exit 9 unless answer == "y"
 end
 
+def menu(text, choices)
+  labels = nil
+  values = nil
+  choice = nil
+
+  if choices.is_a?(Array)
+    labels = choices
+    values = choices
+  elsif choices.is_a?(Hash)
+    labels = choices.keys
+    values = choices.values
+  else
+    puts "menu() 'choices' parameter must be an Array or an Hash".red
+    exit 10
+  end
+
+  loop do
+    labels.each_with_index do |label, index|
+      puts "#{index + 1}. #{label}"
+    end
+    puts text
+    choice = STDIN.gets.chomp.to_i
+    break if !values[choice - 1].nil?
+  end
+
+  values[choice - 1]
+end
+
 # @param uri [String]
 def require_remote(uri)
   cache_path = "/tmp/run_cache_#{Digest::MD5.hexdigest(uri)}"

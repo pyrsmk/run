@@ -275,6 +275,28 @@ $ run dangerous_task
 This task will delete your hard drive. Are you sure about that? [yN]
 ```
 
+#### menu
+
+It displays a simple menu where you can choose an element that is returned by the function.
+
+```rb
+# Array syntax
+task :deploy_aws do
+  region = menu "Where?", ["us‑east‑2", "us-west-1", "eu-west-1"]
+end
+```
+
+```rb
+# Hash syntax
+task :deploy_aws do
+  region = menu "Where?", {
+    "US East (Ohio)" => "us‑east‑2",
+    "US West (N. California)" => "us-west-1",
+    "Europe (Ireland)" => "eu-west-1",
+  }
+end
+```
+
 ## Recipes
 
 ### Interrupting a task
@@ -320,3 +342,4 @@ Run can exit with several different codes:
 - 7: Runfile not found.
 - 8: Unable to load a remote file.
 - 9: The user has answered "No" to an "Are you sure?" question.
+- 10: Menu parameters are invalid.

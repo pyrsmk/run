@@ -224,16 +224,54 @@ RSpec.describe "run" do
 
     it "does not fail if the answer is `yes`" do
       Dir.chdir("#{__dir__}/fixtures/helpers1") do
-        stdout, _, status = Open3.capture3("#{RUN_PATH} foo", stdin_data: "#{yes}\n")
+        _, _, status = Open3.capture3("#{RUN_PATH} foo", stdin_data: "#{yes}\n")
         expect(status.exitstatus).to eq 0
       end
     end
 
     it "exits if the answer is `no`" do
       Dir.chdir("#{__dir__}/fixtures/helpers1") do
-        stdout, _, status = Open3.capture3("#{RUN_PATH} foo", stdin_data: "#{no}\n")
+        _, _, status = Open3.capture3("#{RUN_PATH} foo", stdin_data: "#{no}\n")
         expect(status.exitstatus).to eq 9
       end
+    end
+  end
+
+  describe "menu" do
+    let(:choice) { [[1, "foo"], [2, "bar"]].sample }
+
+    context "when using an Array for choices parameter" do
+      it "displays the menu" do
+        Dir.chdir("#{__dir__}/fixtures/helpers2") do
+          stdout, _, status = Open3.capture3("#{RUN_PATH} test1", stdin_data: "#{choice[0]}\n")
+          expect(stdout).to include "1. foo\n"
+          expect(stdout).to include "2. bar\n"
+          expect(stdout).to include "?\n"
+          expect(stdout).to include "Choice: #{choice[1]}"
+          expect(status.exitstatus).to eq 0
+        end
+      end
+    end
+
+    context "when using a Hash for choices parameter" do
+      it "displays a menu" do
+        Dir.chdir("#{__dir__}/fixtures/helpers2") do
+          stdout, _, status = Open3.capture3("#{RUN_PATH} test2", stdin_data: "#{choice[0]}\n")
+          expect(stdout).to include "1. Foo\n"
+          expect(stdout).to include "2. Bar\n"
+          expect(stdout).to include "?\n"
+          expect(stdout).to include "Choice: #{choice[1]}"
+          expect(status.exitstatus).to eq 0
+        end
+      end
+    end
+
+    it "fails if the choices parameter is not an Array or a Hash" do
+        Dir.chdir("#{__dir__}/fixtures/helpers2") do
+          stdout, _, status = Open3.capture3("#{RUN_PATH} test3")
+          expect(stdout.chomp).to include "menu() 'choices' parameter must be an Array or an Hash"
+          expect(status.exitstatus).to eq 10
+        end
     end
   end
 
