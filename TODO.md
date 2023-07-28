@@ -1,3 +1,4 @@
+- refactoriser en classes
 - retour à la ligne automatique avec la bonne indentation dans l'écran d'aide pour les lignes jugées trop longues
   ```rb
   require "io/console"

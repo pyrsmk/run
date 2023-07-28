@@ -122,6 +122,7 @@ def menu(text, choices)
     choice = STDIN.gets.chomp.to_i
     break if !values[choice - 1].nil?
   end
+  puts
 
   values[choice - 1]
 end
