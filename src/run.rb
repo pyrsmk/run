@@ -130,7 +130,7 @@ end
 # @param uri [String]
 def require_remote(uri)
   cache_path = "/tmp/run_cache_#{Digest::MD5.hexdigest(uri)}"
-  if !File.exists? cache_path
+  if !File.exist? cache_path
     File.write(cache_path, URI.parse(uri).open.read)
   end
   eval File.read(cache_path)
@@ -151,7 +151,7 @@ end
 
 RUNFILE = "Runfile.rb"
 
-if !File.exists?(RUNFILE)
+if !File.exist?(RUNFILE)
   puts
   puts "#{RUNFILE} does not exist".red
   exit 7
@@ -209,7 +209,7 @@ if VERSION && HOMEPAGE
                     .read
       version = /^\s*s.version\s*=\s*"(.+?)"\s*$/.match(contents)
       if !version.nil?
-        next if File.exists?("/tmp/run_dismiss_#{version}")
+        next if File.exist?("/tmp/run_dismiss_#{version}")
         current = VERSION.split "."
         latest = version[1].split "."
         if current[0].to_i < latest[0].to_i ||
