@@ -241,6 +241,10 @@ rescue Interrupt
 rescue => error
   puts
   puts "· #{error.message}".red
-  puts "· #{error.backtrace.first}".red
+  puts "· #{error.backtrace[0]}".red
+  puts "· #{error.backtrace[1]}".red if error.backtrace[1]
+  puts "· #{error.backtrace[2]}".red if error.backtrace[2]
+  puts "· #{error.backtrace[3]}".red if error.backtrace[3]
+  puts "· #{error.backtrace[4]}".red if error.backtrace[4]
   exit 4
 end
