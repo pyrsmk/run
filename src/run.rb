@@ -240,9 +240,14 @@ rescue Interrupt
   exit 3
 rescue => error
   puts
-  puts "· #{error.message}".red
+  message = if error.message.size > 300
+              "#{error.message[0, length]}..."
+            else
+              error.message
+            end
+  puts "· #{message}".red
   error.backtrace.each do |trace|
-    puts "· #{trace.truncate(300)}".red
+    puts "· #{trace}".red
   end
   exit 4
 end
