@@ -241,6 +241,8 @@ rescue Interrupt
 rescue => error
   puts
   puts "· #{error.message}".red
-  error.backtrace.each{ |trace| puts "· #{trace}".red }
+  error.backtrace.each do |trace|
+    puts "· #{trace.truncate(300)}".red
+  end
   exit 4
 end
