@@ -241,7 +241,7 @@ rescue Interrupt
 rescue => error
   puts
   message = if error.message.size > 300
-              "#{error.message[0, length]}..."
+              "#{error.message[0, 300]}..."
             else
               error.message
             end
