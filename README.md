@@ -275,6 +275,18 @@ $ run dangerous_task
 This task will delete your hard drive. Are you sure about that? [yN]
 ```
 
+#### pause
+
+You can pause a task if needed, waiting for the user to press a key, with :
+
+```rb
+task :some_task do
+  # some action
+  pause
+  # some action
+end
+```
+
 #### menu
 
 It displays a simple menu where you can choose an element that is returned by the function.
@@ -326,6 +338,7 @@ task :dev, "Run server in development mode" do
   end
   # Wait for CTRL+C.
   STDIN.gets while true
+  # Some actions to handle before terminating the task, like killing servers...
 end
 ```
 
@@ -338,8 +351,8 @@ Run can exit with several different codes:
 - 3: Unhandled Interrupt error coming from a failed shell command.
 - 4: An error has been raised in the Runfile.
 - 5: The Runfile contains a syntax error.
-- 6: Task parameters are invalid.
+- 6: Some parameters are invalid.
 - 7: Runfile not found.
 - 8: Unable to load a remote file.
 - 9: The user has answered "No" to an "Are you sure?" question.
-- 10: Menu parameters are invalid.
+- 10: The required task already exists.

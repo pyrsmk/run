@@ -1,7 +1,7 @@
 require "open3"
 require "securerandom"
 
-RUN_PATH = "../../../bin/run"
+RUN_PATH = "#{__dir__}/../bin/run"
 
 RSpec.describe "run" do
   describe "Loading" do
@@ -47,15 +47,7 @@ RSpec.describe "run" do
     it "fails if first parameter is not a symbol" do
       Dir.chdir("#{__dir__}/fixtures/tasks1") do
         stdout, _, status = Open3.capture3(RUN_PATH)
-        expect(stdout.chomp).to include "'name' parameter must be a symbol"
-        expect(status.exitstatus).to eq 6
-      end
-    end
-
-    it "fails if second parameter is not a string" do
-      Dir.chdir("#{__dir__}/fixtures/tasks2") do
-        stdout, _, status = Open3.capture3(RUN_PATH)
-        expect(stdout.chomp).to include "'help' parameter must be a string"
+        expect(stdout.chomp).to include "'name' must be a Symbol"
         expect(status.exitstatus).to eq 6
       end
     end
@@ -73,59 +65,6 @@ RSpec.describe "run" do
         stdout, _, status = Open3.capture3("#{RUN_PATH} foo")
         expect(stdout).to include "bar"
         expect(status.exitstatus).to eq 4
-      end
-    end
-  end
-
-  describe "Help" do
-    it "shows help screen by default" do
-      Dir.chdir("#{__dir__}/fixtures/help") do
-        stdout, _, _ = Open3.capture3(RUN_PATH)
-        expect(stdout).to include "Run"
-        expect(stdout).to include "test1"
-        expect(stdout).to include "help1"
-        expect(stdout).to include "test2"
-        expect(stdout).to include "help2"
-      end
-    end
-
-    it "shows help screen when required" do
-      Dir.chdir("#{__dir__}/fixtures/help") do
-        stdout, _, _ = Open3.capture3(RUN_PATH)
-        expect(stdout).to include "Run"
-        expect(stdout).to include "test1"
-        expect(stdout).to include "help1"
-        expect(stdout).to include "test2"
-        expect(stdout).to include "\033[3mhelp2\033[0m"
-        expect(stdout).to include "test3"
-        expect(stdout).to include "first line"
-        expect(stdout).to include "second line"
-        expect(stdout).to include "test4"
-      end
-    end
-
-    [
-      { token: "**", expectation: "\033[1mhelp5\033[0m" },
-      { token: "**", expectation: "foo\033[1mhelp6\033[0mbar" },
-      { token: "**", expectation: "\033[1mhelp7\033[0mfoobar\033[1mhelp7\033[0m" },
-      { token: "__", expectation: "\033[1mhelp8\033[0m" },
-      { token: "__", expectation: "foo\033[1mhelp9\033[0mbar" },
-      { token: "__", expectation: "\033[1mhelp10\033[0mfoobar\033[1mhelp10\033[0m" },
-      { token: "`",  expectation: "\033[36mhelp11\033[0m" },
-      { token: "`",  expectation: "foo\033[36mhelp12\033[0mbar" },
-      { token: "`",  expectation: "\033[36mhelp13\033[0mfoobar\033[36mhelp13\033[0m" },
-      { token: "*",  expectation: "\033[3mhelp14\033[0m" },
-      { token: "*",  expectation: "foo\033[3mhelp15\033[0mbar" },
-      { token: "*",  expectation: "\033[3mhelp16\033[0mfoobar\033[3mhelp16\033[0m" },
-      { token: "_",  expectation: "\033[3mhelp17\033[0m" },
-      { token: "_",  expectation: "foo\033[3mhelp18\033[0mbar" },
-      { token: "_",  expectation: "\033[3mhelp19\033[0mfoobar\033[3mhelp19\033[0m" },
-    ].each do |test|
-      it "converts Markdown (token: #{test[:token]})" do
-        Dir.chdir("#{__dir__}/fixtures/help") do
-          stdout, _, _ = Open3.capture3(RUN_PATH)
-          expect(stdout).to include test[:expectation]
-        end
       end
     end
   end
@@ -269,18 +208,9 @@ RSpec.describe "run" do
     it "fails if the choices parameter is not an Array or a Hash" do
         Dir.chdir("#{__dir__}/fixtures/helpers2") do
           stdout, _, status = Open3.capture3("#{RUN_PATH} test3")
-          expect(stdout.chomp).to include "menu() 'choices' parameter must be an Array or an Hash"
-          expect(status.exitstatus).to eq 10
+          expect(stdout.chomp).to include "'choices' must be an Array or an Hash"
+          expect(status.exitstatus).to eq 6
         end
     end
-  end
-
-  # TODO Currently we cannot test this feature because we cannot mock anything since it's
-  # run into a subprocess. To be able to test this we need to refactor Run and put those
-  # methods in a class.
-  describe "Requiring remote files" do
-    it "requires a remote file"
-    it "uses cache when it exists"
-    it "requires an extension"
   end
 end

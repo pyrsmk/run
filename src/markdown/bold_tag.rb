@@ -1,5 +1,4 @@
 require_relative "./abstract_tag"
-require_relative "../string"
 
 module Markdown
   class Bold
