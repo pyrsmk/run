@@ -13,7 +13,6 @@ Dir.glob(
 
 # Check for new versions.
 if rand(1..5) == 5
-  puts "verification"
   Run::Core::VerifyRunVersion.run
 end
 
