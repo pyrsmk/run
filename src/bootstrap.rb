@@ -12,7 +12,7 @@ Dir.glob(
 )
 
 # Check for new versions.
-Run::Core::UpdateRun.run
+Run::Core::VerifyRunVersion.run
 
 # Expose global methods.
 [:task, :run].each do |name|

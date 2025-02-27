@@ -1,6 +1,6 @@
 module Run
   module Core
-    module UpdateRun
+    module VerifyRunVersion
       REMOTE_GEMSPEC_URL = "https://raw.githubusercontent.com/pyrsmk/run/master/run_tasks.gemspec"
 
       # @return [void]
@@ -12,8 +12,10 @@ module Run
           Version::RemoteGemspecVersion.new(REMOTE_GEMSPEC_URL).extract
         )
         if local_version.major == remote_version.major && local_version < remote_version
-          Run::Task::SystemTask.new("gem update run-tasks").run
-          Run::Core::ReloadRun.run
+          puts
+          puts " A new version of Run is available: #{remote_version}".yellow.bright
+          puts " Please update with: `gem update run_tasks`".yellow.bright
+          puts
         end
       rescue Version::UnreachableError
       end
