@@ -11,6 +11,6 @@ task :publish do
 end
 
 # Run the tests.
-task [:specs, :s, :tests, :t] do |dir = "spec/src"|
+task [:specs, :tests] do |dir = "spec/src"|
   run :rspec, dir
 end
