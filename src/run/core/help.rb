@@ -22,14 +22,14 @@ module Run
               )
               split_comment.map.with_index do |chunk, chunk_line|
                 text = comment_line == 0 && chunk_line == 0 ?
-                      name_verbatim :
-                      " " * tasks_column_length
-                text += chunk
-                output += "#{Markdown::Engine.new(text).to_ansi}\n"
+                       name_verbatim :
+                       " " * tasks_column_length
+                text += Markdown::Engine.new(chunk).to_ansi
+                output += "#{text}\n"
               end
             end
           else
-            output += "#{Markdown::Engine.new(name_verbatim).to_ansi}\n"
+            output += "#{name_verbatim}\n"
           end
 
           output
