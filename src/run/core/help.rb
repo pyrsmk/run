@@ -14,22 +14,22 @@ module Run
           name_verbatim = " #{name_verbatim}".yellow +
                           " " * (tasks_column_length - name_verbatim.size - 1)
 
-          help_verbatim[:comments].each_with_index do |comment, comment_line|
-            split_comment = split_verbatim(
-              comment,
-              STDOUT.winsize[1] - tasks_column_length - 2
-            )
-            if split_comment.size > 0
+          if help_verbatim[:comments].size > 0
+            help_verbatim[:comments].each_with_index do |comment, comment_line|
+              split_comment = split_verbatim(
+                comment,
+                STDOUT.winsize[1] - tasks_column_length - 2
+              )
               split_comment.map.with_index do |chunk, chunk_line|
                 text = comment_line == 0 && chunk_line == 0 ?
-                       name_verbatim :
-                       " " * tasks_column_length
+                      name_verbatim :
+                      " " * tasks_column_length
                 text += chunk
                 output += "#{Markdown::Engine.new(text).to_ansi}\n"
               end
-            else
-              output += "#{Markdown::Engine.new(name_verbatim).to_ansi}\n"
             end
+          else
+            output += "#{Markdown::Engine.new(name_verbatim).to_ansi}\n"
           end
 
           output
