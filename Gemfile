@@ -1,3 +1,7 @@
 source "https://rubygems.org"
 
-gem "rspec", "~>3.12.0"
+gem "tty-prompt"
+
+group :test do
+  gem "rspec", "~> 3.12.0"
+end

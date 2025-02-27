@@ -1,8 +1,8 @@
 Gem::Specification.new do |s|
   s.name        = "run_tasks"
-  s.version     = "1.7.6"
+  s.version     = "2.0.0"
   s.files       = Dir["src/**/*.rb"]
-  s.summary     = "Run project tasks with ease"
+  s.summary     = "Easy project management for the masses"
   s.authors     = ["Aurélien Delogu"]
   s.email       = "aurelien.delogu@gmail.com"
   s.homepage    = "https://github.com/pyrsmk/run"
