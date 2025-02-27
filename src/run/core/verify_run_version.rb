@@ -13,9 +13,8 @@ module Run
         )
         if local_version.major == remote_version.major && local_version < remote_version
           puts
-          puts " A new version of Run is available: #{remote_version}".bright_yellow
+          puts " A new version of Run is available: #{remote_version.major}.#{remote_version.minor}.#{remote_version.patch}".bright_yellow
           puts " Please update with: `gem update run_tasks`".bright_yellow
-          puts
         end
       rescue Version::UnreachableError
       end

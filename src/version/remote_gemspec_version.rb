@@ -10,7 +10,9 @@ module Version
 
     # @return [String]
     def extract
-      contents = URI.parse(@url).open.read
+      # `mode` and `perm` options are not used, but we need to set them in order to set
+      # options...
+      contents = URI.parse(@url).open("r", 0666, open_timeout: 1, read_timeout: 1).read
       matches = /^\s*s.version\s*=\s*"(.+?)"\s*$/.match(contents)
       raise UnreachableError.new if matches.nil?
       matches[1]

@@ -12,7 +12,10 @@ Dir.glob(
 )
 
 # Check for new versions.
-Run::Core::VerifyRunVersion.run
+if rand(1..5) == 5
+  puts "verification"
+  Run::Core::VerifyRunVersion.run
+end
 
 # Expose global methods.
 [:task, :run].each do |name|
