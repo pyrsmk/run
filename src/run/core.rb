@@ -6,7 +6,7 @@ module Run
 
     # @return [void]
     def self.run_run
-      raise Run::Error::NonExistingRunfile.new if !File.exists?(RUNFILE_FILENAME)
+      raise Run::Error::NonExistingRunfile.new if !File.exist?(RUNFILE_FILENAME)
       require "./#{RUNFILE_FILENAME}"
       run_requested_task if !display_help_if_needed
     end
