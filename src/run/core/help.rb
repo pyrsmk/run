@@ -46,10 +46,10 @@ module Run
       def self.extract_help_verbatims(contents, tasks)
         lines = contents.lines.map(&:chomp)
 
-        tasks.map do |names:, line:|
-          lines_to_scan = (0..(line - 2 < 0 ? 0 : line - 2)).to_a.reverse
+        tasks.map do |task|
+          lines_to_scan = (0..(task[:line] - 2 < 0 ? 0 : task[:line] - 2)).to_a.reverse
           {
-            names: names,
+            names: task[:names],
             comments: lines_to_scan.each_with_object([]) do |current_line, comments|
               match = /^\s*#\s*(?<comment>.*?)\s*$/.match(lines[current_line])
               break comments if !match
