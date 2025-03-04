@@ -31,7 +31,9 @@ end
 task :rspec do |path|
   command = "bundle exec rspec"
 
-  if path.include?(":")
+  if !path
+    run command
+  elsif path.include?(":")
     run "#{command} #{path}"
   else
     run "#{command} #{expand(File.directory?(path) ? "#{path}/**/*" : path)}"
