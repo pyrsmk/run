@@ -196,6 +196,24 @@ task :some_task do
 end
 ```
 
+### question
+
+Displays a question and returns the answer.
+
+```rb
+task :survey do
+  comment = question "Did your meal was good?"
+end
+```
+
+You can also pass a regex to validation the entered value:
+
+```rb
+task :age do
+  age = question "What is your age?", /^\d+$/
+end
+```
+
 ### menu
 
 It displays an advanced menu where you can choose an element that will be returned by the function.
