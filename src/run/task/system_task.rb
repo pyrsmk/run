@@ -2,16 +2,22 @@ module Run
   module Task
     class SystemTask
       # @param command [String]
-      def initialize(command)
+      # @param detach [Boolean]
+      def initialize(command, detach: false)
         @command = command
+        @detach = detach
       end
 
-      # @param arguments [Array] (unused)
-      # @param options [Hash] (unused)
       # @return [void]
-      def run(*arguments, **options)
+      def run
         puts ">".bright_blue + " #{@command}".bright_white
         puts
+
+        if @detach
+          Run::Core::Registry[@command] = spawn(@command, in: "/dev/null")
+          puts
+          return
+        end
 
         case system(@command)
         when false

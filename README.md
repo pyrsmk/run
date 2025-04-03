@@ -308,3 +308,5 @@ Run has specific exit codes so you can handle it better in some environments, li
 - 8: Unable to load a remote file.
 - 9: The user has answered "No" to an "Are you sure?" question.
 - 10: The required task already exists.
+- 11: The required command is not running.
+- 12: The required task does not exist.

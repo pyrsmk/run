@@ -19,8 +19,14 @@ module Run
       if task_name_or_command.is_a?(Symbol)
         run_block_task(task_name_or_command, *arguments, **options)
       else
-        run_system_task(task_name_or_command)
+        run_system_task(task_name_or_command, detach: options[:detach] || false)
       end
+    end
+
+    # @param command [String]
+    # @return [void]
+    def self.stop(command)
+      stop_system_task(command)
     end
 
     # @param names [Array<Symbol> | Symbol]
@@ -86,13 +92,22 @@ module Run
     # @param options [Hash]
     # @return [void]
     def self.run_block_task(name, *args, **options)
-      @@tasks.find{ |item| item[:names].include? name }[:task].run(*args, **options)
+      task = @@tasks.find{ |item| item[:names].include? name }
+      raise Error::NonExistingTask.new(name) if task.nil?
+
+      task[:task].run(*args, **options)
     end
 
-    # @param name [Symbol]
+    # @param command [String]
     # @return [void]
-    def self.run_system_task(name)
-      Run::Task::SystemTask.new(name).run
+    def self.run_system_task(command, detach: false)
+      Run::Task::SystemTask.new(command, detach: detach).run
+    end
+
+    # @param command [String]
+    # @return [void]
+    def self.stop_system_task(command)
+      Run::Task::StopTask.new(command).run
     end
   end
 end

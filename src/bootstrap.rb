@@ -17,7 +17,7 @@ if rand(1..5) == 5
 end
 
 # Expose global methods.
-[:task, :run].each do |name|
+[:task, :run, :stop].each do |name|
   define_method name do |*args, **options, &block|
     if options.size == 0
       Run::Core.send(name, *args, &block)
@@ -86,6 +86,12 @@ rescue Run::Error::Aborted => error
 rescue Run::Error::ExistingTask => error
   puts error.message.red
   exit 10
+rescue Run::Error::NonRunningCommand => error
+  puts error.message.red
+  exit 11
+rescue Run::Error::NonExistingTask => error
+  puts error.message.red
+  exit 12
 rescue => error
   format_error error
   exit 4
