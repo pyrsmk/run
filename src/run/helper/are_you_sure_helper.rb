@@ -17,7 +17,7 @@ module Run
 
       # @return [String, Nil]
       def answer
-        STDIN.gets.chomp.downcase.chars.first
+        STDIN.gets&.chomp&.downcase&.chars&.first || "n"
       end
     end
   end
