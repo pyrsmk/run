@@ -16,7 +16,7 @@ module Version
       matches = /^\s*s.version\s*=\s*"(.+?)"\s*$/.match(contents)
       raise UnreachableError.new if matches.nil?
       matches[1]
-    rescue SocketError
+    rescue SocketError, Net::OpenTimeout
       raise UnreachableError.new
     end
   end
