@@ -8,9 +8,13 @@ Run is compatible with Ruby >=2.4.
 
 ## Installation
 
+Run must be installed globally :
+
 ```sh
 gem install run_tasks
 ```
+
+But also as a dependency of your project in Gemfile. The idea behind this is to avoid version conflict with projects relying on different Run architectures, and also to keep the global `run` call.
 
 ## Running Run
 
