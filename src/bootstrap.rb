@@ -11,11 +11,6 @@ Dir.glob(
   &method(:require)
 )
 
-# Check for new versions.
-if rand(1..5) == 5
-  Run::Core::VerifyRunVersion.run
-end
-
 # Expose global methods.
 [:task, :run, :stop].each do |name|
   define_method name do |*args, **options, &block|
