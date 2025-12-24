@@ -315,3 +315,12 @@ Run has specific exit codes so you can handle it better in some environments, li
 - 10: The required task already exists.
 - 11: The required command is not running.
 - 12: The required task does not exist.
+
+## Development
+
+To install the current Run version globally :
+
+```sh
+gem install specific_install
+gem specific_install http://github.com/pyrsmk/run.git <branch>
+```
