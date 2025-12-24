@@ -35,7 +35,7 @@ module Run
           output
         end
 
-        puts output
+        output
       end
 
       private

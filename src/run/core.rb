@@ -56,8 +56,17 @@ module Run
       if ARGV.size == 0 || (ARGV.size == 1 && ["help", "version"].include?(ARGV[0]))
         puts
         puts " Run v#{Gemspec::Metadata.new("run_tasks").read.version}".bright_blue
+        contents = Run::Core::Help.run(File.read(File.join(Dir.pwd, RUNFILE_FILENAME)))
+        if contents.strip.size > 0
+          puts
+          puts " Project tasks:".magenta
+          puts
+          puts contents
+        end
         puts
-        Run::Core::Help.run(File.read("./#{RUNFILE_FILENAME}"))
+        puts " Global tasks:".magenta
+        puts
+        puts Run::Core::Help.run(File.read(File.join(__dir__, "..", "bootstrap.rb")))
         return true
       end
       false

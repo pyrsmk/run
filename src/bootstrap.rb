@@ -22,7 +22,7 @@ Dir.glob(
   end
 end
 
-# Define global tasks.
+# Run tests (if any).
 task :rspec do |path|
   command = "bundle exec rspec"
 
@@ -35,7 +35,7 @@ task :rspec do |path|
   end
 end
 
-# Publish the gem.
+# Publish the gem (if publishable).
 task :publish do
   gemspec_files = Dir.glob(File.join(Dir.pwd, "*.gemspec"))
   raise ".gemspec file not found in the project directory" if gemspec_files.empty?
