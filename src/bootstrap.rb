@@ -35,6 +35,16 @@ task :rspec do |path|
   end
 end
 
+# Publish the gem.
+task :publish do
+  gemspec_files = Dir.glob(File.join(Dir.pwd, "*.gemspec"))
+  raise ".gemspec file not found in the project directory" if gemspec_files.empty?
+  gemspec = Gem::Specification::load(gemspec_files.first)
+  run "gem build #{gemspec.name}"
+  run "gem push #{gemspec.name}-#{gemspec.version}.gem"
+  `rm #{gemspec.name}-#{gemspec.version}.gem`
+end
+
 # Expose helpers.
 Dir.glob(File.join(__dir__, "run", "helper", "*.rb")) do |path|
   filename = File.basename(path, ".rb")
