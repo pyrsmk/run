@@ -292,6 +292,8 @@ Run also comes with some generic tasks for recurring tasks.
 
 ### rspec
 
+You can call directly `run rspec` or abstract the task like this:
+
 ```rb
 # Run the tests.
 task [:specs, :s, :tests, :t] do |path = "spec/src"|
@@ -300,6 +302,16 @@ end
 ```
 
 > The `rspec` task will look into `spec/src` by default, so the above task is just explanatory is you want overload default behaviour.
+
+### publish
+
+You can publish your library with:
+
+```sh
+run publish
+```
+
+> At the moment, this is only compatible with gems.
 
 ## Exit codes
 
