@@ -299,6 +299,8 @@ task [:specs, :s, :tests, :t] do |path = "spec/src"|
 end
 ```
 
+> The `rspec` task will look into `spec/src` by default, so the above task is just explanatory is you want overload default behaviour.
+
 ## Exit codes
 
 Run has specific exit codes so you can handle it better in some environments, like in CI or in deployments:

@@ -23,7 +23,7 @@ Dir.glob(
 end
 
 # Run tests (if any).
-task :rspec do |path|
+task :rspec do |path = "spec/src"|
   command = "bundle exec rspec"
 
   if !path
