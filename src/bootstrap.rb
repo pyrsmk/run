@@ -4,10 +4,13 @@ require "io/console"
 require "readline"
 require "rubygems"
 require "securerandom"
+require "rb_monkey"
+require "rb_gemspec"
+require "rb_markdown"
 
 # Require all files.
 Dir.glob(
-  File.join(__dir__, "{monkey,gemspec,markdown,version,run}", "**", "*.rb"),
+  File.join(__dir__, "run", "**", "*.rb"),
   &method(:require)
 )
 
