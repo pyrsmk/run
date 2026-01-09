@@ -1,29 +1,4 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require "pathname"
-
-EXECUTION_FLAG = "RUN_EXECUTED_FROM_BUNDLER"
-
-def already_under_bundler?
-  ENV.key?("BUNDLE_GEMFILE") || ENV.key?(EXECUTION_FLAG)
-end
-
-def has_gemfile?
-   File.exist?(File.join(Dir.pwd, "Gemfile"))
-end
-
-def in_project_dir?
-  File.exist?(File.join(Dir.pwd, "run_tasks.gemspec"))
-end
-
-# Local execution with Bundler.
-if !already_under_bundler? && has_gemfile? && !in_project_dir?
-  ENV[EXECUTION_FLAG] = "1"
-  bootstrap_path = File.expand_path("../src/bootstrap.rb", __dir__)
-  exec ENV, "bundle", "exec", "ruby", bootstrap_path, *ARGV
-  exit
-end
-
-# Global execution.
 require_relative "../src/bootstrap"

@@ -4,18 +4,19 @@ Manage your Ruby projects with a straightforward syntax.
 
 ## Compatibility
 
-Run is compatible with Ruby >=2.4.
+Run is known to work with Ruby >=2.4.
 
 ## Installation
 
-Run must be installed globally :
-
 ```sh
-# We recommend pinning a specific version.
-gem install run_tasks -v <version>
+gem "run_tasks"
 ```
 
-But also as a dependency of your project in Gemfile. The idea behind this is to avoid version conflict with projects relying on different Run architectures, and also to keep the global `run` call.
+Since the `run` binary is accessible through bundler via `bundle exec run`, it would be more practical to add a shell alias to simplify things:
+
+```sh
+alias run='bundle exec run'
+```
 
 ## Running Run
 
@@ -329,12 +330,3 @@ Run has specific exit codes so you can handle it better in some environments, li
 - 10: The required task already exists.
 - 11: The required command is not running.
 - 12: The required task does not exist.
-
-## Development
-
-To install the current Run version globally :
-
-```sh
-gem install specific_install
-gem specific_install http://github.com/pyrsmk/run.git <branch>
-```

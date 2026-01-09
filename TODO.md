@@ -1,6 +1,6 @@
 # TODO
 
-- externaliser le code secondaire vers des gems
+- ne pas rediriger "run version" vers "run help" et juste afficher la version
 - ajouter des vérifications dans les tâches globales
 - apparemment y'a une méthode `stop` mais pas de doc, investiguer
 - mode quiet
