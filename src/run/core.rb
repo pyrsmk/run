@@ -21,7 +21,7 @@ module Run
       if task_name_or_command.is_a?(Symbol)
         run_block_task(task_name_or_command, *arguments, **options)
       else
-        run_system_task(task_name_or_command, detach: options[:detach] || false)
+        run_system_task(task_name_or_command)
       end
     end
 
@@ -111,8 +111,8 @@ module Run
 
     # @param command [String]
     # @return [void]
-    def self.run_system_task(command, detach: false)
-      Run::Task::SystemTask.new(command, detach: detach).run
+    def self.run_system_task(command)
+      Run::Task::SystemTask.new(command).run
     end
 
     # @param command [String]
