@@ -28,12 +28,6 @@ module Run
       end
     end
 
-    # @param command [String]
-    # @return [void]
-    def self.stop(command)
-      stop_system_task(command)
-    end
-
     # @param names [Array<Symbol> | Symbol]
     # @param block [Proc]
     # @return [void]
@@ -124,12 +118,6 @@ module Run
     # @return [void]
     def self.run_system_task(command)
       Run::Task::SystemTask.new(command).run
-    end
-
-    # @param command [String]
-    # @return [void]
-    def self.stop_system_task(command)
-      Run::Task::StopTask.new(command).run
     end
 
     # @return [Boolean]
