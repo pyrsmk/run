@@ -9,8 +9,15 @@ module Run
     # @return [void]
     def self.run_run
       raise Run::Error::NonExistingRunfile.new if !File.exist?(RUNFILE_FILENAME)
-      require "./#{RUNFILE_FILENAME}"
-      run_requested_task if !display_help_if_needed
+      if ARGV.size == 1 && ARGV[0] == "version"
+        display_version
+      elsif ARGV.size == 0 || (ARGV.size == 1 && ARGV[0] == "help")
+        require "./#{RUNFILE_FILENAME}"
+        display_help
+      else
+        require "./#{RUNFILE_FILENAME}"
+        run_requested_task
+      end
     end
 
     # @param task_name_or_command [Symbol, String]
@@ -50,25 +57,27 @@ module Run
 
     private
 
-    # @return [Boolean]
-    def self.display_help_if_needed
-      if ARGV.size == 0 || (ARGV.size == 1 && ["help", "version"].include?(ARGV[0]))
+    # @return [void]
+    def self.display_version
+      puts Gemspec::Metadata.new("run_tasks").read.version
+    end
+
+    # @return [void]
+    def self.display_help
+      puts
+      puts " Run v#{Gemspec::Metadata.new("run_tasks").read.version}".bright_blue
+      contents = Run::Core::Help.run(File.read(File.join(Dir.pwd, RUNFILE_FILENAME)))
+      if contents.strip.size > 0
         puts
-        puts " Run v#{Gemspec::Metadata.new("run_tasks").read.version}".bright_blue
-        contents = Run::Core::Help.run(File.read(File.join(Dir.pwd, RUNFILE_FILENAME)))
-        if contents.strip.size > 0
-          puts
-          puts " Project tasks:".magenta
-          puts
-          puts contents
-        end
+        puts " Project tasks:".magenta
         puts
-        puts " Global tasks:".magenta
-        puts
-        puts Run::Core::Help.run(File.read(File.join(__dir__, "..", "bootstrap.rb")))
-        return true
+        puts contents
       end
-      false
+      puts
+      puts " Global tasks:".magenta
+      puts
+      puts Run::Core::Help.run(File.read(File.join(__dir__, "..", "bootstrap.rb")))
+      puts
     end
 
     # @return [void]
