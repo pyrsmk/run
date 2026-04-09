@@ -1,13 +1,5 @@
 require "rubygems"
 
-task :puts do
-  puts "lol"
-end
-
-task :quiet1 do
-  run :puts
-end
-
-task :quiet2 do
-  run "echo 'wtf'"
+task :test do |foo: false|
+  puts foo ? "true" : "false"
 end

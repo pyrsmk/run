@@ -135,6 +135,28 @@ task :test do
 end
 ```
 
+Every parameter passed from the CLI is auto-converted:
+
+- a float/integer is converted to a float
+- true/false strings are converted to booleans
+- every other parameter is converted to a symbol
+
+We also support named booleans. For example, imagine you want to run your server in tunnel mode:
+
+```rb
+task :server do |tunnel: false|
+  run "my_server #{tunnel ? "--tunnel" : ""}"
+end
+```
+
+When you call...
+
+```sh
+run server +tunnel
+```
+
+...the parameter `tunnel: true` will be passed to your task. The same if you pass `-tunnel`, it will pass `false`.
+
 ## Colorization & styles
 
 It is often needed to colorize/stylize the messages sent to the user with `puts`. For this matter, Run is natively shipped with basic styles.

@@ -82,17 +82,25 @@ module Run
       name = ARGV[0].gsub('-', '_').to_sym # Auto-replace hyphens to underscores.
       raise Run::Error::UnknownTask.new(name) if !task_exist?(name)
 
-      # Cast value to the right type.
-      args = ARGV.slice(1, ARGV.size - 1).map do |arg|
-        value = Float(arg) rescue nil
-        next value if !value.nil?
-        next true if arg == "true"
-        next false if arg == "false"
-        next arg.to_sym if arg.match?(/^\w+$/)
-        arg
+      args = []
+      options = {}
+
+      ARGV.slice(1, ARGV.size - 1).each do |arg|
+        if (match = arg.match(/^\+(\w+)$/))
+          options[match[1].to_sym] = true
+        elsif (match = arg.match(/^-(\w+)$/))
+          options[match[1].to_sym] = false
+        else
+          value = Float(arg) rescue nil
+          next args << value if !value.nil?
+          next args << true if arg == "true"
+          next args << false if arg == "false"
+          next args << arg.to_sym if arg.match?(/^\w+$/)
+          args << arg
+        end
       end
 
-      run name, *args
+      run name, *args, **options
     end
 
     # @param name [Symbol]
