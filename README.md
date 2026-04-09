@@ -173,6 +173,18 @@ And the available colors are :
 - bright_cyan
 - bright_white
 
+## Quiet mode
+
+If you want to run a task (or a command) without it to being able to write on STDOUT/STDERR, pass the quiet flag to true :
+
+```rb
+task :echo do
+  run "echo 'test'", quiet: true
+end
+```
+
+It's useful, for example, when you want to delete a file at the beginning of a task without it to being verbose when the file does not exist.
+
 ## Helpers
 
 Run comes with a few helpers to help writing tasks quicker.

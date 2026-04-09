@@ -1,5 +1,13 @@
 require "rubygems"
 
-task :quiet do
-  run "rg test /Users/aurelien", quiet: true
+task :puts do
+  puts "lol"
+end
+
+task :quiet1 do
+  run :puts
+end
+
+task :quiet2 do
+  run "echo 'wtf'"
 end

@@ -18,10 +18,13 @@ module Run
     # @param options [Hash] Optional options sent to the task.
     # @return [void]
     def self.run(task_name_or_command, *arguments, **options)
-      if task_name_or_command.is_a?(Symbol)
-        run_block_task(task_name_or_command, *arguments, **options)
-      else
-        run_system_task(task_name_or_command)
+      quiet = options.delete(:quiet) || quiet?
+      with_quiet_context(quiet) do
+        if task_name_or_command.is_a?(Symbol)
+          run_block_task(task_name_or_command, *arguments, **options)
+        else
+          run_system_task(task_name_or_command)
+        end
       end
     end
 
@@ -119,6 +122,40 @@ module Run
     # @return [void]
     def self.stop_system_task(command)
       Run::Task::StopTask.new(command).run
+    end
+
+    # @return [Boolean]
+    def self.quiet?
+      !!Thread.current[:quiet]
+    end
+
+    # @param quiet [Boolean]
+    # @return [void]
+    def self.with_quiet_context(quiet)
+      already_quiet = quiet?
+      Thread.current[:quiet] = quiet || already_quiet
+
+      prev_stdout = nil
+      prev_stderr = nil
+
+      if quiet && !already_quiet
+        prev_stdout = $stdout.dup
+        prev_stderr = $stderr.dup
+        $stdout.reopen(File::NULL)
+        $stderr.reopen(File::NULL)
+      end
+
+      yield
+    rescue Interrupt
+      raise unless Thread.current[:quiet]
+    ensure
+      if prev_stdout
+        $stdout.reopen(prev_stdout)
+        $stderr.reopen(prev_stderr)
+        prev_stdout.close
+        prev_stderr.close
+      end
+      Thread.current[:quiet] = already_quiet
     end
   end
 end
