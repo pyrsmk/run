@@ -2,7 +2,7 @@
 
 module Run
   module Core
-    RUNFILE_FILENAME = "Runfile.rb"
+    RUNFILE_FILENAME = ENV.fetch('RUNFILE', 'Runfile.rb')
     RESERVED_TASK_NAMES = ["help", "version"]
     @@tasks = []
     @@runfile_version = nil
@@ -16,19 +16,19 @@ module Run
     # @return [void]
     def self.run_run
       if ARGV.size == 1 && ARGV[0] == "--completions"
-        require "./#{RUNFILE_FILENAME}" if File.exist?(RUNFILE_FILENAME)
+        require File.expand_path(RUNFILE_FILENAME) if File.exist?(RUNFILE_FILENAME)
         puts completions.join("\n")
         return
       end
-      raise Run::Error::NonExistingRunfile.new if !File.exist?(RUNFILE_FILENAME)
+      raise Run::Error::NonExistingRunfile.new if !File.file?(RUNFILE_FILENAME)
       if ARGV.size == 1 && ARGV[0] == "version"
         puts version
       elsif ARGV.size == 0 || (ARGV.size == 1 && ARGV[0] == "help")
-        require "./#{RUNFILE_FILENAME}"
+        require File.expand_path(RUNFILE_FILENAME)
         check_runfile_version!
         display_help
       else
-        require "./#{RUNFILE_FILENAME}"
+        require File.expand_path(RUNFILE_FILENAME)
         check_runfile_version!
         run_requested_task
       end

@@ -366,7 +366,16 @@ run publish
 
 > At the moment, this is only compatible with gems.
 
-## Exit codes
+## Advanced usage
+
+### Specifying Runfile path
+
+If you want to load Run from another directory, you have two choices :
+
+- change the working directory in your script,
+- or pass the Runfile path with `RUNFILE=/path/to/Runfile.rb run my_task`
+
+### Exit codes
 
 Run has specific exit codes so you can handle it better in some environments, like in CI or in deployments:
 

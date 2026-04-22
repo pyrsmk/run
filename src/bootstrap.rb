@@ -114,8 +114,8 @@ rescue SyntaxError => error
 rescue ArgumentError => error
   format_error error
   exit 6
-rescue Run::Error::NonExistingRunfile
-  puts "Runfile.rb does not exist in '#{Dir.pwd}'".red
+rescue Run::Error::NonExistingRunfile => error
+  puts error.message.red
   exit 7
 rescue Run::Error::Aborted => error
   exit 9
