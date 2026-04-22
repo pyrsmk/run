@@ -12,10 +12,10 @@ Run is known to work with Ruby >=2.4.
 gem install "run_tasks"
 ```
 
-Since the `run` binary is accessible through bundler via `bundle exec run`, it would be more practical to add a shell alias to simplify things:
+To enable ZSH completions:
 
 ```sh
-alias run='bundle exec run'
+run install_completions
 ```
 
 ## Running Run

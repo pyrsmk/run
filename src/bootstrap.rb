@@ -44,6 +44,28 @@ task :rspec do |path = "spec/src"|
   end
 end
 
+# Install ZSH completions.
+task :install_completions do
+  source = File.expand_path(File.join(__dir__, '..', 'completions', '_run'))
+  dir    = File.expand_path('~/.zfunc')
+  dest   = File.join(dir, '_run')
+  zshrc  = File.expand_path('~/.zshrc')
+
+  FileUtils.mkdir_p(dir)
+  FileUtils.cp(source, dest)
+
+  content = File.exist?(zshrc) ? File.read(zshrc) : ''
+  additions = []
+  additions << 'fpath=(~/.zfunc $fpath)' unless content.include?('~/.zfunc')
+  additions << 'autoload -Uz compinit && compinit' unless content.match?(/compinit/)
+
+  if additions.any?
+    File.open(zshrc, 'a') { |f| f.puts "\n# run completions\n#{additions.join("\n")}" }
+  end
+
+  puts "ZSH completions installed. Run 'source ~/.zshrc' to activate."
+end
+
 # Publish the gem (if publishable).
 task :publish do
   gemspec_files = Dir.glob(File.join(Dir.pwd, "*.gemspec"))

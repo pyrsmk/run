@@ -15,6 +15,11 @@ module Run
 
     # @return [void]
     def self.run_run
+      if ARGV.size == 1 && ARGV[0] == "--completions"
+        require "./#{RUNFILE_FILENAME}" if File.exist?(RUNFILE_FILENAME)
+        puts completions.join("\n")
+        return
+      end
       raise Run::Error::NonExistingRunfile.new if !File.exist?(RUNFILE_FILENAME)
       if ARGV.size == 1 && ARGV[0] == "version"
         puts version
@@ -76,6 +81,11 @@ module Run
     # @return [void]
     def self.display_version
       puts Gemspec::Metadata.new("run_tasks").read.version
+    end
+
+    # @return [void]
+    def self.completions
+      (@@tasks.flat_map{ |t| t[:names] }.map(&:to_s) + RESERVED_TASK_NAMES).sort.uniq
     end
 
     # @return [void]
