@@ -391,3 +391,14 @@ Run has specific exit codes so you can handle it better in some environments, li
 - 10: The required task already exists.
 - 11: The required command is not running.
 - 12: The required task does not exist.
+
+## Development
+
+For test purposes, it's often needed to install Run from a development branch. For this, you'll need to follow these steps:
+
+```sh
+gem install specific_install
+gem specific_install http://github.com/pyrsmk/run.git <branch>
+```
+
+Do not forget to uninstall other `run_tasks` packages if needed, to avoid conflicts. And if you're under Rbenv, you'll probably need to do `rbenv rehash` too.
