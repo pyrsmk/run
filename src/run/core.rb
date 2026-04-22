@@ -73,7 +73,7 @@ module Run
 
     # @return [void]
     def self.check_runfile_version!
-      if (@@runfile_version || 2) != version.split(".").first.to_i
+      if (@@runfile_version || 2) != version.to_s.split(".").first.to_i
         raise Run::Error::RunfileVersionMismatch.new
       end
     end

@@ -211,6 +211,24 @@ It's useful, for example, when you want to delete a file at the beginning of a t
 
 Run comes with a few helpers to help writing tasks quicker.
 
+### bind
+
+`bind` lets you group several tasks/processes so when one stops all the other will stop as well.
+
+```rb
+task :dev do
+  bind :rails, :vite
+end
+
+task :rails do
+  run "bundle exec unicorn -c config/unicorn.rb -p 3000"
+end
+
+task :vite do
+  run "bin/vite dev"
+end
+```
+
 ### are_you_sure
 
 When called, it asks a question to the user which has the choice to enter `y`, `yes`, `n` or `no` (the default answer). When `no` is selected, the task will exit with a `9` code.
