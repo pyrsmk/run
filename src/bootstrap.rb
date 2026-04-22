@@ -63,7 +63,8 @@ task :install_completions do
     File.open(zshrc, 'a') { |f| f.puts "\n# run completions\n#{additions.join("\n")}" }
   end
 
-  puts "ZSH completions installed. Run 'source ~/.zshrc' to activate."
+  puts "ZSH completions installed."
+  puts "Run 'source ~/.zshrc' to activate."
 end
 
 # Publish the gem (if publishable).
