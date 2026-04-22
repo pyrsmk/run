@@ -1,0 +1,11 @@
+#compdef run
+
+_run() {
+  local output
+  output="$(run --completions 2>/dev/null)" || return
+  local -a tasks
+  tasks=(${(f)output})
+  _describe 'task' tasks
+}
+
+_run "$@"

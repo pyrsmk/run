@@ -5,17 +5,26 @@ module Run
     RUNFILE_FILENAME = "Runfile.rb"
     RESERVED_TASK_NAMES = ["help", "version"]
     @@tasks = []
+    @@runfile_version = nil
+
+    # @param version [Integer]
+    # @return [void]
+    def self.runfile_version=(version)
+      @@runfile_version = version.to_i
+    end
 
     # @return [void]
     def self.run_run
       raise Run::Error::NonExistingRunfile.new if !File.exist?(RUNFILE_FILENAME)
       if ARGV.size == 1 && ARGV[0] == "version"
-        display_version
+        puts version
       elsif ARGV.size == 0 || (ARGV.size == 1 && ARGV[0] == "help")
         require "./#{RUNFILE_FILENAME}"
+        check_runfile_version!
         display_help
       else
         require "./#{RUNFILE_FILENAME}"
+        check_runfile_version!
         run_requested_task
       end
     end
@@ -58,6 +67,13 @@ module Run
     private
 
     # @return [void]
+    def self.check_runfile_version!
+      if (@@runfile_version || 2) != version.split(".").first.to_i
+        raise Run::Error::RunfileVersionMismatch.new
+      end
+    end
+
+    # @return [void]
     def self.display_version
       puts Gemspec::Metadata.new("run_tasks").read.version
     end
@@ -65,7 +81,7 @@ module Run
     # @return [void]
     def self.display_help
       puts
-      puts " Run v#{Gemspec::Metadata.new("run_tasks").read.version}".bright_blue
+      puts " Run v#{version}".bright_blue
       contents = Run::Core::Help.run(File.read(File.join(Dir.pwd, RUNFILE_FILENAME)))
       if contents.strip.size > 0
         puts
@@ -127,6 +143,17 @@ module Run
     # @return [void]
     def self.run_system_task(command)
       Run::Task::SystemTask.new(command).run
+    end
+
+    # @return [String]
+    def self.version
+      gemspec_files = Dir.glob(File.join(Dir.pwd, "*.gemspec"))
+
+      if gemspec_files.first
+        Gem::Specification::load(gemspec_files.first).version.to_s
+      else
+        Gemspec::Metadata.new("run_tasks").read.version
+      end
     end
 
     # @return [Boolean]

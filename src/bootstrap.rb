@@ -27,7 +27,11 @@ Dir.glob(
   end
 end
 
-# Run tests (if any).
+define_method :version do |version|
+  Run::Core.runfile_version = version
+end
+
+# Run Rspec tests (if any).
 task :rspec do |path = "spec/src"|
   command = "bundle exec rspec"
 
@@ -99,6 +103,9 @@ rescue Run::Error::ExistingTask => error
 rescue Run::Error::NonExistingTask => error
   puts error.message.red
   exit 12
+rescue Run::Error::RunfileVersionMismatch => error
+  puts error.message.red
+  exit 13
 rescue => error
   format_error error
   exit 4

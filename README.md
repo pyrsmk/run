@@ -9,7 +9,7 @@ Run is known to work with Ruby >=2.4.
 ## Installation
 
 ```sh
-gem "run_tasks"
+gem install "run_tasks"
 ```
 
 Since the `run` binary is accessible through bundler via `bundle exec run`, it would be more practical to add a shell alias to simplify things:
