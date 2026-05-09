@@ -157,13 +157,7 @@ module Run
 
     # @return [String]
     def self.version
-      gemspec_files = Dir.glob(File.join(Dir.pwd, "*.gemspec"))
-
-      if gemspec_files.first
-        Gem::Specification::load(gemspec_files.first).version.to_s
-      else
-        Gemspec::Metadata.new("run_tasks").read.version
-      end
+      Gemspec::Metadata.new("run_tasks").read.version
     end
 
     # @return [Boolean]
