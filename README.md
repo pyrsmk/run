@@ -6,6 +6,10 @@ Manage your Ruby projects with a straightforward syntax.
 
 Run is known to work with Ruby >=2.4.
 
+## TODO
+
+- add default value support in `question` helper
+
 ## Installation
 
 ```sh
@@ -157,6 +161,18 @@ run server +tunnel
 
 ...the parameter `tunnel: true` will be passed to your task. The same if you pass `-tunnel`, it will pass `false`.
 
+## Quiet mode
+
+If you want to run a task (or a command) without it to being able to write on STDOUT/STDERR, pass the quiet flag to true :
+
+```rb
+task :echo do
+  run "echo 'test'", quiet: true
+end
+```
+
+It's useful, for example, when you want to delete a file at the beginning of a task without it to being verbose when the file does not exist.
+
 ## Colorization & styles
 
 It is often needed to colorize/stylize the messages sent to the user with `puts`. For this matter, Run is natively shipped with basic styles.
@@ -195,21 +211,20 @@ And the available colors are :
 - bright_cyan
 - bright_white
 
-## Quiet mode
-
-If you want to run a task (or a command) without it to being able to write on STDOUT/STDERR, pass the quiet flag to true :
-
-```rb
-task :echo do
-  run "echo 'test'", quiet: true
-end
-```
-
-It's useful, for example, when you want to delete a file at the beginning of a task without it to being verbose when the file does not exist.
-
 ## Helpers
 
 Run comes with a few helpers to help writing tasks quicker.
+
+### are_you_sure
+
+When called, it asks a question to the user which has the choice to enter `y`, `yes`, `n` or `no` (the default answer). When `no` is selected, the task will exit with a `9` code.
+
+```rb
+task :dangerous_task do
+  are_you_sure "This task will delete your hard drive. Are you sure about that?"
+  # Some dangerous actions.
+end
+```
 
 ### bind
 
@@ -229,16 +244,61 @@ task :vite do
 end
 ```
 
-### are_you_sure
+### catch_interruption
 
-When called, it asks a question to the user which has the choice to enter `y`, `yes`, `n` or `no` (the default answer). When `no` is selected, the task will exit with a `9` code.
+Alternatively, if you have a command that stays open until you hit `CTRL+C` (like a Docker container) and you need to catch the binding, you probably want to use `catch_interruption` instead so it lets the command handle the interruption gracefully and executes some actions afterwards.
 
 ```rb
-task :dangerous_task do
-  are_you_sure "This task will delete your hard drive. Are you sure about that?"
-  #
-  # Some dangerous actions.
-  #
+# Run server in development mode.
+task :server do
+  catch_interruption("docker run -d -p 8080:80 web_server") do
+    # Run some clean up actions here after the command has been interrupted.
+  end
+end
+```
+
+### exists
+
+Handy helper to verify if a program exists.
+
+```rb
+task :man do
+  command = exists("bat") ? "bat" : "cat"
+  run "#{command} #{__dir__}/README.md"
+end
+```
+
+### expand
+
+This one takes a glob string and process it to return a list of files.
+
+```rb
+task :scan do |glob|
+  expand(glob).each do |file_path|
+    # Do something.
+  end
+end
+```
+
+### menu
+
+It displays an advanced menu where you can choose an element that will be returned by the function.
+
+```rb
+# Array syntax
+task :deploy_aws do
+  region = menu "Location?", ["us‑east‑2", "us-west-1", "eu-west-1"]
+end
+```
+
+```rb
+# Hash syntax
+task :deploy_aws do
+  region = menu "Location?", {
+    "US East (Ohio)" => "us‑east‑2",
+    "US West (N. California)" => "us-west-1",
+    "Europe (Ireland)" => "eu-west-1",
+  }
 end
 ```
 
@@ -247,10 +307,10 @@ end
 You can pause a task if needed, waiting for the user to press any key.
 
 ```rb
-task :some_task do
-  # some action
+task :deploy do
+  puts "Press enter to continue.".yellow
   pause
-  # some action
+  run :deploy_production
 end
 ```
 
@@ -272,35 +332,13 @@ task :age do
 end
 ```
 
-### menu
-
-It displays an advanced menu where you can choose an element that will be returned by the function.
-
-```rb
-# Array syntax
-task :deploy_aws do
-  region = menu "Where?", ["us‑east‑2", "us-west-1", "eu-west-1"]
-end
-```
-
-```rb
-# Hash syntax
-task :deploy_aws do
-  region = menu "Where?", {
-    "US East (Ohio)" => "us‑east‑2",
-    "US West (N. California)" => "us-west-1",
-    "Europe (Ireland)" => "eu-west-1",
-  }
-end
-```
-
 ### wait_for_interruption
 
 If you need to wait for the user to interrupt a task of, for example, several running servers, you can use the `wait_for_interruption` helper.
 
 ```rb
 # Run server in development mode.
-task :dev do
+task :server do
   Thread.new do
     # Run first server.
   end
@@ -314,34 +352,27 @@ task :dev do
 end
 ```
 
-### catch_interruption
-
-Alternatively, if you have a command that stays open until you hit `CTRL+C` (like a Docker container) and you need to catch the binding, you probably want to use `catch_interruption` instead so it lets the command handle the interruption gracefully and executes some actions afterwards.
-
-```rb
-# Run server in development mode.
-task :dev do
-  catch_interruption("docker run -d -p 8080:80 my_docker_image") do
-    # Run some clean up actions here after the command has been interrupted.
-  end
-end
-```
-
-### expand
-
-This one takes a glob string and process it to return a list of files.
-
-```rb
-task :scan do |glob|
-  expand(glob).each do |file_path|
-    # Do something.
-  end
-end
-```
-
 ## Base tasks
 
 Run also comes with some generic tasks for recurring tasks.
+
+### publish
+
+You can publish your library with:
+
+```sh
+run publish
+```
+
+> At the moment, this is only compatible with gems.
+
+### man
+
+It simply displays a cheatsheet for Run.
+
+```sh
+run man
+```
 
 ### rspec
 
@@ -355,16 +386,6 @@ end
 ```
 
 > The `rspec` task will look into `spec/src` by default, so the above task is just explanatory is you want overload default behaviour.
-
-### publish
-
-You can publish your library with:
-
-```sh
-run publish
-```
-
-> At the moment, this is only compatible with gems.
 
 ## Advanced usage
 
@@ -402,7 +423,3 @@ gem specific_install http://github.com/pyrsmk/run.git <branch>
 ```
 
 Do not forget to uninstall other `run_tasks` packages if needed, to avoid conflicts. And if you're under Rbenv, you'll probably need to do `rbenv rehash` too.
-
-## TODO
-
-- add default value support in `question` helper

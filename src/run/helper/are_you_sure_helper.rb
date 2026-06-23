@@ -5,7 +5,7 @@ module Run
     class AreYouSureHelper
       # @param message [String]
       def initialize(message = "Are you sure?")
-        raise ArgumentError.new("'message' must be a String") if !message.is_a?(String)
+        raise ArgumentError.new("'message' must be a String") unless message.is_a?(String)
         @message = message
       end
 

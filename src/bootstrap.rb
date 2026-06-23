@@ -77,6 +77,12 @@ task :publish do
   `rm #{gemspec.name}-#{gemspec.version}.gem`
 end
 
+# Display the manual.
+task :man do
+  command = exists("bat") ? "bat" : "cat"
+  run "#{command} #{__dir__}/../CHEATSHEET.md"
+end
+
 # Expose helpers.
 Dir.glob(File.join(__dir__, "run", "helper", "*.rb")) do |path|
   filename = File.basename(path, ".rb")
