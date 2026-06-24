@@ -79,8 +79,7 @@ end
 
 # Display the manual.
 task :man do
-  command = exists("bat") ? "bat" : "cat"
-  run "#{command} #{__dir__}/../CHEATSHEET.md"
+  puts Markdown::Engine.new(File.read("#{__dir__}/../CHEATSHEET.md")).to_ansi
 end
 
 # Expose helpers.

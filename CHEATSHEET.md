@@ -1,20 +1,18 @@
-# Run cheatsheet
-
-## Defining a task
+# Defining a task
 
 ```rb
 task :eslint do
 end
 ```
 
-## Defining a task with aliases
+# Defining a task with aliases
 
 ```rb
 task [:console, :c] do
 end
 ```
 
-## Defining a task with parameters
+# Defining a task with parameters
 
 ```rb
 task :hello do |name, age|
@@ -22,7 +20,7 @@ task :hello do |name, age|
 end
 ```
 
-## Running commands
+# Running commands
 
 ```rb
 task :clear_all do
@@ -30,7 +28,7 @@ task :clear_all do
 end
 ```
 
-## Running subtasks
+# Running subtasks
 
 ```rb
 task :linting do
@@ -39,7 +37,7 @@ task :linting do
 end
 ```
 
-## Running a task/command in quiet mode
+# Running a task/command in quiet mode
 
 ```rb
 task :clear_cache do
@@ -47,7 +45,7 @@ task :clear_cache do
 end
 ```
 
-## Using named booleans
+# Using named booleans
 
 ```sh
 run server +tunnel
@@ -59,9 +57,9 @@ task :server do |tunnel: false|
 end
 ```
 
-## Helpers
+# Helpers
 
-### are_you_sure
+## are_you_sure
 
 ```rb
 task :dangerous_task do
@@ -70,13 +68,9 @@ task :dangerous_task do
 end
 ```
 
-### bind
+## bind
 
 ```rb
-task :dev do
-  bind :rails, :vite
-end
-
 task :rails do
   run "bundle exec unicorn -c config/unicorn.rb -p 3000"
 end
@@ -84,9 +78,21 @@ end
 task :vite do
   run "bin/vite dev"
 end
+
+task :dev do
+  # Bind `rails` and `vite` tasks together, if one closes, the other terminates too.
+  bind :rails, :vite
+end
 ```
 
-### catch_interruption
+```rb
+task :dev do
+  # Plug STDIN to the `rails` task.
+  bind :rails, :vite, stdin: :rails
+end
+```
+
+## catch_interruption
 
 ```rb
 task :server do
@@ -96,7 +102,7 @@ task :server do
 end
 ```
 
-### exists
+## exists
 
 ```rb
 task :man do
@@ -105,7 +111,7 @@ task :man do
 end
 ```
 
-### expand
+## expand
 
 ```rb
 task :scan do |glob|
@@ -115,7 +121,7 @@ task :scan do |glob|
 end
 ```
 
-### menu
+## menu
 
 ```rb
 task :deploy_aws do
@@ -133,7 +139,7 @@ task :deploy_aws do
 end
 ```
 
-### pause
+## pause
 
 ```rb
 task :deploy do
@@ -143,7 +149,7 @@ task :deploy do
 end
 ```
 
-### question
+## question
 
 ```rb
 task :survey do
@@ -157,7 +163,7 @@ task :age do
 end
 ```
 
-### wait_for_interruption
+## wait_for_interruption
 
 ```rb
 task :server do
@@ -174,7 +180,7 @@ task :server do
 end
 ```
 
-## Colorization
+# Colorization
 
 ```rb
 puts "hello".bold
@@ -205,7 +211,7 @@ puts "hello".bright_white
 puts "hello".green.bold.italic
 ```
 
-## Advanced usage
+# Advanced usage
 
 ```sh
 RUNFILE=/path/to/Runfile.rb run my_task
