@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name            = "run_tasks"
-  s.version         = "3.2.5"
+  s.version         = "3.2.6"
   s.files           = Dir["src/**/*.rb"] + Dir["completions/*"] + Dir["CHEATSHEET.md"]
   s.summary         = "Task runner for the masses"
   s.authors         = ["Aurélien Delogu"]
