@@ -121,8 +121,8 @@ module Run
         elsif (match = arg.match(/^-([a-zA-Z_]\w*)$/))
           options[match[1].to_sym] = false
           next
-        elsif arg.match?(/^-?\d+$/)
-          args << Integer(arg)
+        elsif arg.match?(/^-?(?:0|[1-9]\d*)$/)
+          args << Integer(arg, 10)
           next
         elsif arg.match?(/^-?\d+\.\d+$/)
           args << Float(arg)
