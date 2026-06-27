@@ -117,18 +117,23 @@ module Run
       ARGV.slice(1, ARGV.size - 1).each do |arg|
         if (match = arg.match(/^\+([a-zA-Z_]\w*)$/))
           options[match[1].to_sym] = true
+          next
         elsif (match = arg.match(/^-([a-zA-Z_]\w*)$/))
           options[match[1].to_sym] = false
+          next
         elsif arg.match?(/^-?\d+$/)
           args << Integer(arg)
+          next
         elsif arg.match?(/^-?\d+\.\d+$/)
           args << Float(arg)
-        else
-          next args << true if arg == "true"
-          next args << false if arg == "false"
-          next args << arg.to_sym if arg.match?(/^\w+$/)
-          args << arg
+          next
         end
+        raise
+      rescue
+        next args << true if arg == "true"
+        next args << false if arg == "false"
+        next args << arg.to_sym if arg.match?(/^\w+$/)
+        args << arg
       end
 
       run name, *args, **options
