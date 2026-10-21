@@ -163,6 +163,26 @@ task :age do
 end
 ```
 
+```rb
+task :age do
+  age = question "What is your age?", /^\d+$/, default: "30"
+end
+```
+
+## yesno
+
+```rb
+task :deploy do
+  run :migrate if yesno "Run migrations?"
+end
+```
+
+```rb
+task :deploy do
+  run :migrate if yesno "Run migrations?", default: true
+end
+```
+
 ## wait_for_interruption
 
 ```rb
