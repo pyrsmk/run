@@ -6,10 +6,6 @@ Manage your Ruby projects with a straightforward syntax.
 
 Run is known to work with Ruby >=2.4.
 
-## TODO
-
-- add default value support in `question` helper
-
 ## Installation
 
 ```sh
@@ -329,6 +325,32 @@ You can also pass a regex to validation the entered value:
 ```rb
 task :age do
   age = question "What is your age?", /^\d+$/
+end
+```
+
+A default value can be set, it will be returned if the user enters nothing:
+
+```rb
+task :age do
+  age = question "What is your age?", /^\d+$/, default: "30"
+end
+```
+
+### yesno
+
+Asks a yes/no question and returns a boolean. The user can answer `y`, `yes`, `n` or `no`.
+
+```rb
+task :deploy do
+  run :migrate if yesno "Run migrations?"
+end
+```
+
+Without a default value, an answer is required. With one, it is returned if the user enters nothing:
+
+```rb
+task :deploy do
+  run :migrate if yesno "Run migrations?", default: true
 end
 ```
 
