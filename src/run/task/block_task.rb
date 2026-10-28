@@ -17,11 +17,7 @@ module Run
       # @param options [Hash]
       # @return [void]
       def run(*arguments, **options)
-        if options.size == 0
-          @block.call *arguments
-        else
-          @block.call *arguments, **options
-        end
+        @block.call(*arguments, **options)
       end
     end
   end

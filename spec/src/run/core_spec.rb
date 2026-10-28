@@ -104,10 +104,10 @@ RSpec.describe Run::Core do
     end
 
     it "rejects a repeated name" do
-      expect { parse("a=1", "a=2") }.to raise_error(ArgumentError, "Parameter 'a' is given more than once")
-      expect { parse("+a", "a=2") }.to raise_error(ArgumentError, "Parameter 'a' is given more than once")
-      expect { parse("+a", "-a") }.to raise_error(ArgumentError, "Parameter 'a' is given more than once")
-      expect { parse("dry-run=1", "+dry_run") }.to raise_error(ArgumentError, "Parameter 'dry_run' is given more than once")
+      expect { parse("a=1", "a=2") }.to raise_error(Run::Error::DuplicateParameter, "Parameter 'a' is given more than once")
+      expect { parse("+a", "a=2") }.to raise_error(Run::Error::DuplicateParameter, "Parameter 'a' is given more than once")
+      expect { parse("+a", "-a") }.to raise_error(Run::Error::DuplicateParameter, "Parameter 'a' is given more than once")
+      expect { parse("dry-run=1", "+dry_run") }.to raise_error(Run::Error::DuplicateParameter, "Parameter 'dry_run' is given more than once")
     end
   end
 
@@ -134,7 +134,7 @@ RSpec.describe Run::Core do
       Run::Core.task(:spec_without_keywords) { |stage, branch = "master"| }
 
       expect { Run::Core.run(:spec_without_keywords, "prod", reviewer: "x", draft: false) }.to raise_error(
-        ArgumentError, "Task 'spec_without_keywords' does not accept named parameters: reviewer, draft"
+        Run::Error::UnexpectedNamedParameters, "Task 'spec_without_keywords' does not accept named parameters: reviewer, draft"
       )
     end
 

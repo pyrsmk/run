@@ -111,6 +111,9 @@ rescue Interrupt
 rescue SyntaxError => error
   format_error error
   exit 5
+rescue Run::Error::DuplicateParameter, Run::Error::UnexpectedNamedParameters => error
+  puts error.message.red
+  exit 6
 rescue ArgumentError => error
   format_error error
   exit 6

@@ -125,12 +125,12 @@ end
 
 Every argument passed from the CLI is auto-converted, as a whole:
 
-| Argument                                         | Result    |
-|--------------------------------------------------|-----------|
-| an integer without leading zero: `42`, `-3`, `0` | `Integer` |
-| a decimal without leading zero: `1.5`, `-0.5`    | `Float`   |
-| `true` / `false`                                 | boolean   |
-| anything else, `007` included                    | `String`  |
+| Argument                                                  | Result    |
+|-----------------------------------------------------------|-----------|
+| an integer: `42`, `-3`, `0`                               | `Integer` |
+| a decimal: `1.5`, `0.5`, `-0.5`                           | `Float`   |
+| `true` / `false`                                          | boolean   |
+| anything else, including superfluous zeros: `007`, `00.5` | `String`  |
 
 > Arguments never become symbols: if your task needs one, call `.to_sym`.
 

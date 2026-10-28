@@ -5,6 +5,8 @@ module Run
     RUNFILE_FILENAME = ENV.fetch('RUNFILE', 'Runfile.rb')
     RESERVED_TASK_NAMES = ["help", "version"]
     NAME_PATTERN = /[a-zA-Z_]\w*(?:-\w+)*/
+    OPTION_PATTERN = /\A([+-])(#{NAME_PATTERN})\z/
+    NAMED_PARAMETER_PATTERN = /\A(#{NAME_PATTERN})=(.*)\z/m
     @@tasks = []
     @@runfile_version = nil
 
@@ -112,11 +114,12 @@ module Run
       options = {}
 
       words.each do |word|
-        if (match = word.match(/\A([+-])(#{NAME_PATTERN})\z/))
-          add_option(options, match[2], match[1] == "+")
-        elsif (match = word.match(/\A(#{NAME_PATTERN})=(.*)\z/m))
-          values = match[2].split(",", -1).map { |value| convert_argument(value) }
-          add_option(options, match[1], values.size > 1 ? values : convert_argument(match[2]))
+        if (match = word.match(OPTION_PATTERN))
+          sign, name = match.captures
+          add_option(options, name, sign == "+")
+        elsif (match = word.match(NAMED_PARAMETER_PATTERN))
+          name, value = match.captures
+          add_option(options, name, convert_named_value(value))
         else
           args << convert_argument(word)
         end
@@ -137,13 +140,21 @@ module Run
       end
     end
 
+    # @param value [String]
+    # @return [Object, Array]
+    def self.convert_named_value(value)
+      return convert_argument(value) if !value.include?(",")
+
+      value.split(",", -1).map { |item| convert_argument(item) }
+    end
+
     # @param options [Hash]
     # @param name [String]
     # @param value [Object]
     # @return [void]
     def self.add_option(options, name, value)
       key = name.tr("-", "_").to_sym
-      raise ArgumentError.new("Parameter '#{key}' is given more than once") if options.key?(key)
+      raise Run::Error::DuplicateParameter.new(key) if options.key?(key)
 
       options[key] = value
     end
@@ -162,7 +173,7 @@ module Run
       task = @@tasks.find{ |item| item[:names].include? name }
       raise Error::NonExistingTask.new(name) if task.nil?
       if options.any? && !task[:task].accepts_keywords?
-        raise ArgumentError.new("Task '#{name}' does not accept named parameters: #{options.keys.join(", ")}")
+        raise Error::UnexpectedNamedParameters.new(name, options.keys)
       end
 
       task[:task].run(*args, **options)
