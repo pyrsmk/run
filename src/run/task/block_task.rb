@@ -8,6 +8,11 @@ module Run
         @block = block
       end
 
+      # @return [Boolean]
+      def accepts_keywords?
+        @block.parameters.any?{ |type, _| [:key, :keyreq, :keyrest].include?(type) }
+      end
+
       # @param arguments [Array]
       # @param options [Hash]
       # @return [void]

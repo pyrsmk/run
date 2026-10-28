@@ -123,7 +123,20 @@ task :test do
 end
 ```
 
-Tasks also support named arguments, but those ones are (currently) only available from inside the Runfile:
+Every argument passed from the CLI is auto-converted, as a whole:
+
+| Argument                                         | Result    |
+|--------------------------------------------------|-----------|
+| an integer without leading zero: `42`, `-3`, `0` | `Integer` |
+| a decimal without leading zero: `1.5`, `-0.5`    | `Float`   |
+| `true` / `false`                                 | boolean   |
+| anything else, `007` included                    | `String`  |
+
+> Arguments never become symbols: if your task needs one, call `.to_sym`.
+
+### Named parameters
+
+Tasks also support named parameters, from the Runfile:
 
 ```rb
 task :hello do |name:, age:|
@@ -135,11 +148,27 @@ task :test do
 end
 ```
 
-Every parameter passed from the CLI is auto-converted:
+And from the CLI, with `name=value`:
 
-- a float/integer is converted to a float
-- true/false strings are converted to booleans
-- every other parameter is converted to a symbol
+```sh
+$ run hello name='John Doe' age=30
+Hello John Doe, you are 30.
+```
+
+The value is auto-converted like any other argument. Separate values with commas to pass an array, each element being auto-converted:
+
+| Command                                | Received by the task                |
+|----------------------------------------|-------------------------------------|
+| `run review reviewer=clement`          | `reviewer: "clement"`               |
+| `run review reviewer=clement,morisset` | `reviewer: ["clement", "morisset"]` |
+| `run build retries=3`                  | `retries: 3`                        |
+| `run build ids=1,2,x`                  | `ids: [1, 2, "x"]`                  |
+| `run build dry=true`                   | `dry: true`                         |
+| `run build tag=`                       | `tag: ""`                           |
+
+> A single value gives a scalar, not an array: if your task expects a list, use `Array(value)`. Commas cannot be escaped.
+
+### Named booleans
 
 We also support named booleans. For example, imagine you want to run your server in tunnel mode:
 
@@ -156,6 +185,12 @@ run server +tunnel
 ```
 
 ...the parameter `tunnel: true` will be passed to your task. The same if you pass `-tunnel`, it will pass `false`.
+
+### Additional notes
+
+- Hyphens in names are replaced by underscores: `+dry-run` and `dry-run=1` give `dry_run:`.
+- A name cannot be given twice (`a=1 a=2`, `+a -a`, `+a a=2`).
+- A task receiving named parameters or booleans must declare keywords (`reviewer:`, `**options`…). A task declaring keywords and receiving an unknown one fails too, as with any Ruby block.
 
 ## Quiet mode
 

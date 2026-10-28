@@ -4,6 +4,7 @@ module Run
   module Core
     RUNFILE_FILENAME = ENV.fetch('RUNFILE', 'Runfile.rb')
     RESERVED_TASK_NAMES = ["help", "version"]
+    NAME_PATTERN = /[a-zA-Z_]\w*(?:-\w+)*/
     @@tasks = []
     @@runfile_version = nil
 
@@ -111,32 +112,51 @@ module Run
       name = ARGV[0].gsub('-', '_').to_sym # Auto-replace hyphens to underscores.
       raise Run::Error::UnknownTask.new(name) if !task_exist?(name)
 
+      args, options = parse_arguments(ARGV.drop(1))
+      run name, *args, **options
+    end
+
+    # @param words [Array<String>]
+    # @return [Array(Array, Hash)]
+    def self.parse_arguments(words)
       args = []
       options = {}
 
-      ARGV.slice(1, ARGV.size - 1).each do |arg|
-        if (match = arg.match(/^\+([a-zA-Z_]\w*)$/))
-          options[match[1].to_sym] = true
-          next
-        elsif (match = arg.match(/^-([a-zA-Z_]\w*)$/))
-          options[match[1].to_sym] = false
-          next
-        elsif arg.match?(/^-?(?:0|[1-9]\d*)$/)
-          args << Integer(arg, 10)
-          next
-        elsif arg.match?(/^-?\d+\.\d+$/)
-          args << Float(arg)
-          next
+      words.each do |word|
+        if (match = word.match(/\A([+-])(#{NAME_PATTERN})\z/))
+          add_option(options, match[2], match[1] == "+")
+        elsif (match = word.match(/\A(#{NAME_PATTERN})=(.*)\z/m))
+          values = match[2].split(",", -1).map { |value| convert_argument(value) }
+          add_option(options, match[1], values.size > 1 ? values : convert_argument(match[2]))
+        else
+          args << convert_argument(word)
         end
-        raise
-      rescue
-        next args << true if arg == "true"
-        next args << false if arg == "false"
-        next args << arg.to_sym if arg.match?(/^\w+$/)
-        args << arg
       end
 
-      run name, *args, **options
+      [args, options]
+    end
+
+    # @param value [String]
+    # @return [Integer, Float, Boolean, String]
+    def self.convert_argument(value)
+      case value
+      when /\A-?(?:0|[1-9]\d*)\z/ then Integer(value, 10)
+      when /\A-?(?:0|[1-9]\d*)\.\d+\z/ then Float(value)
+      when "true" then true
+      when "false" then false
+      else value
+      end
+    end
+
+    # @param options [Hash]
+    # @param name [String]
+    # @param value [Object]
+    # @return [void]
+    def self.add_option(options, name, value)
+      key = name.tr("-", "_").to_sym
+      raise ArgumentError.new("Parameter '#{key}' is given more than once") if options.key?(key)
+
+      options[key] = value
     end
 
     # @param name [Symbol]
@@ -152,6 +172,9 @@ module Run
     def self.run_block_task(name, *args, **options)
       task = @@tasks.find{ |item| item[:names].include? name }
       raise Error::NonExistingTask.new(name) if task.nil?
+      if options.any? && !task[:task].accepts_keywords?
+        raise ArgumentError.new("Task '#{name}' does not accept named parameters: #{options.keys.join(", ")}")
+      end
 
       task[:task].run(*args, **options)
     end
