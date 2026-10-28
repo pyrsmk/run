@@ -96,14 +96,8 @@ module Run
       contents = Run::Core::Help.run(File.read(File.join(Dir.pwd, RUNFILE_FILENAME)))
       if contents.strip.size > 0
         puts
-        puts " Project tasks:".magenta
-        puts
         puts contents
       end
-      puts
-      puts " Global tasks:".magenta
-      puts
-      puts Run::Core::Help.run(File.read(File.join(__dir__, "..", "bootstrap.rb")))
       puts
     end
 
