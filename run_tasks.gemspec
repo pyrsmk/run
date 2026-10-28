@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
   s.name            = "run_tasks"
   s.version         = "4.0.0"
-  s.files           = Dir["src/**/*.rb"] + Dir["completions/*"]
+  s.files           = Dir["src/**/*.rb"] + Dir["completions/*"] + ["README.md"]
   s.summary         = "Task runner for the masses"
   s.authors         = ["Aurélien Delogu"]
   s.email           = "aurelien.delogu@gmail.com"
