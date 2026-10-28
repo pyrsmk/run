@@ -423,14 +423,6 @@ run publish
 
 > At the moment, this is only compatible with gems.
 
-### man
-
-It simply displays a cheatsheet for Run.
-
-```sh
-run man
-```
-
 ### rspec
 
 You can call directly `run rspec` or abstract the task like this:
