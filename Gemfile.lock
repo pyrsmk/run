@@ -4,7 +4,6 @@ GEM
     diff-lcs (1.6.2)
     pastel (0.8.0)
       tty-color (~> 0.5)
-    rb_gemspec (0.2.2)
     rb_markdown (0.2.4)
       rb_monkey (~> 0.1.0)
       rouge (~> 3.30)
@@ -39,7 +38,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  rb_gemspec (~> 0.2.2)
   rb_markdown
   rb_monkey
   rspec (~> 3.12.0)

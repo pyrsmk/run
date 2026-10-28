@@ -23,7 +23,7 @@ module Run
       end
       raise Run::Error::NonExistingRunfile.new if !File.file?(RUNFILE_FILENAME)
       if ARGV.size == 1 && ARGV[0] == "version"
-        puts version
+        puts VERSION
       elsif ARGV.size == 0 || (ARGV.size == 1 && ARGV[0] == "help")
         require File.expand_path(RUNFILE_FILENAME)
         check_runfile_version!
@@ -74,14 +74,9 @@ module Run
 
     # @return [void]
     def self.check_runfile_version!
-      if (@@runfile_version || 2) != version.to_s.split(".").first.to_i
+      if (@@runfile_version || 2) != VERSION.split(".").first.to_i
         raise Run::Error::RunfileVersionMismatch.new
       end
-    end
-
-    # @return [void]
-    def self.display_version
-      puts Gemspec::Metadata.new("run_tasks").read.version
     end
 
     # @return [void]
@@ -92,7 +87,7 @@ module Run
     # @return [void]
     def self.display_help
       puts
-      puts " Run v#{version}".bright_blue
+      puts " Run v#{VERSION}".bright_blue
       contents = Run::Core::Help.run(File.read(File.join(Dir.pwd, RUNFILE_FILENAME)))
       if contents.strip.size > 0
         puts
@@ -177,11 +172,6 @@ module Run
     # @return [void]
     def self.run_system_task(command)
       Run::Task::SystemTask.new(command).run
-    end
-
-    # @return [String]
-    def self.version
-      Gemspec::Metadata.new("run_tasks").read.version
     end
 
     # @return [Boolean]

@@ -1,6 +1,8 @@
+require_relative "src/run/version"
+
 Gem::Specification.new do |s|
   s.name            = "run_tasks"
-  s.version         = "4.0.0"
+  s.version         = Run::VERSION
   s.files           = Dir["src/**/*.rb"] + Dir["completions/*"] + ["README.md"]
   s.summary         = "Task runner for the masses"
   s.authors         = ["Aurélien Delogu"]
@@ -10,6 +12,5 @@ Gem::Specification.new do |s|
   s.executables     = ["run"]
   s.add_dependency  "tty-prompt", "~> 0.23.1"
   s.add_dependency  "rb_monkey", "~> 0.1.0"
-  s.add_dependency  "rb_gemspec", "~> 0.2.1"
   s.add_dependency  "rb_markdown", "~> 0.2.0"
 end

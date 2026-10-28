@@ -7,7 +7,6 @@ require "readline"
 require "rubygems"
 require "securerandom"
 require "rb_monkey"
-require "rb_gemspec"
 require "rb_markdown"
 
 # Require all files.
