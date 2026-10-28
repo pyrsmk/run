@@ -147,4 +147,31 @@ RSpec.describe Run::Core do
       expect(received).to eq(["prod", "master"])
     end
   end
+
+  describe ".declared_runfile_version" do
+    it "reads the version declared by the Runfile" do
+      expect(Run::Core.declared_runfile_version("version 3\n\ntask :dev do\nend\n")).to eq(3)
+      expect(Run::Core.declared_runfile_version("# frozen_string_literal: true\nversion(4)\n")).to eq(4)
+    end
+
+    it "falls back to version 2 when the Runfile declares none" do
+      expect(Run::Core.declared_runfile_version("task :dev do\nend\n")).to eq(2)
+    end
+
+    it "ignores a variable named version" do
+      expect(Run::Core.declared_runfile_version("version = 3\n")).to eq(2)
+    end
+  end
+
+  describe ".installed_version_for" do
+    it "picks the highest installed version of a major" do
+      specs = ["3.2.8", "3.3.0", "4.0.0"].map { |version| Gem::Specification.new("run_tasks", version) }
+      allow(Gem::Specification).to receive(:find_all_by_name) do |name, requirement|
+        specs.select { |spec| Gem::Requirement.new(requirement).satisfied_by?(spec.version) }
+      end
+
+      expect(Run::Core.installed_version_for(3)).to eq(Gem::Version.new("3.3.0"))
+      expect(Run::Core.installed_version_for(2)).to be_nil
+    end
+  end
 end

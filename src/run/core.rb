@@ -7,6 +7,7 @@ module Run
     NAME_PATTERN = /[a-zA-Z_]\w*(?:-\w+)*/
     OPTION_PATTERN = /\A([+-])(#{NAME_PATTERN})\z/
     NAMED_PARAMETER_PATTERN = /\A(#{NAME_PATTERN})=(.*)\z/m
+    RUNFILE_VERSION_PATTERN = /^\s*version\s*\(?\s*(\d+)/
     @@tasks = []
     @@runfile_version = nil
 
@@ -18,6 +19,7 @@ module Run
 
     # @return [void]
     def self.run_run
+      delegate_to_runfile_version! if File.file?(RUNFILE_FILENAME)
       if ARGV.size == 1 && ARGV[0] == "--completions"
         require File.expand_path(RUNFILE_FILENAME) if File.exist?(RUNFILE_FILENAME)
         puts completions.join("\n")
@@ -72,7 +74,30 @@ module Run
       }
     end
 
+    # @param contents [String]
+    # @return [Integer]
+    def self.declared_runfile_version(contents)
+      contents[RUNFILE_VERSION_PATTERN, 1]&.to_i || 2
+    end
+
+    # @param major [Integer]
+    # @return [Gem::Version, nil]
+    def self.installed_version_for(major)
+      Gem::Specification.find_all_by_name("run_tasks", "~> #{major}.0").map(&:version).max
+    end
+
     private
+
+    # @return [void]
+    def self.delegate_to_runfile_version!
+      major = declared_runfile_version(File.read(RUNFILE_FILENAME))
+      return if major == VERSION.split(".").first.to_i
+
+      version = installed_version_for(major)
+      raise Run::Error::RunfileVersionMismatch.new(major) if !version
+
+      exec Gem.ruby, File.join(Gem.bindir, "run"), "_#{version}_", *ARGV
+    end
 
     # @return [void]
     def self.check_runfile_version!

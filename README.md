@@ -34,6 +34,16 @@ run help
 
 > Note that the command `run` displays the help screen by default when no task is specified.
 
+## Runfile version
+
+The first line of a Runfile declares the major version of Run it is written for:
+
+```rb
+version 4
+```
+
+When a Runfile declares another major version, Run hands over to the matching version if it is installed, so projects written for Run 3 and Run 4 can live side by side. A Runfile without this line is a version 2 one.
+
 ## Writing tasks
 
 ```rb
