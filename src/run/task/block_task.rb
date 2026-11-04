@@ -17,7 +17,11 @@ module Run
       # @param options [Hash]
       # @return [void]
       def run(*arguments, **options)
-        @block.call(*arguments, **options)
+        if options.empty?
+          @block.call(*arguments)
+        else
+          @block.call(*arguments, **options)
+        end
       end
     end
   end
